@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const { registerAdmin, loginAdmin, changePassword, updateAdminName, getAdmin } = require('../Controllers/adminController');
+const { getAllMutualDivorceForm } = require('../Controllers/mutualDivorceFormController');
 const { getAllUser } = require('../Controllers/userController');
 
 //middleware
@@ -16,5 +17,7 @@ router.get("/getAdmin", verifyAdminToken, isAdminPresent, getAdmin);
 
 // User
 router.get("/users", verifyAdminToken, isAdminPresent, getAllUser);
+
+router.get("/mutualDivorceDetails", verifyAdminToken, isAdminPresent, getAllMutualDivorceForm);
 
 module.exports = router;

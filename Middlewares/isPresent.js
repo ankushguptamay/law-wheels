@@ -32,7 +32,7 @@ exports.isUserPresent = async (req, res, next) => {
         const user = await User.findOne({
             where: {
                 [Op.and]: [
-                    { id: req.user.id }, { email: req.user.mobileNumber }
+                    { id: req.user.id }, { mobileNumber: req.user.mobileNumber }
                 ]
             }
         });

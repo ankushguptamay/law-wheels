@@ -1,5 +1,5 @@
 const db = require("../Models");
-const { createHeDetails, createSheDetails } = require("../Middlewares/validate")
+const { createHeDetails, createSheDetails, createRequiredDetails } = require("../Middlewares/validate")
 const MutualDivorceForm = db.mutualDivorceForm;
 
 exports.createHeDetails = async (req, res) => {
@@ -80,7 +80,7 @@ exports.createSheDetails = async (req, res) => {
         //         });
         //     }
         // }
-        await MutualDivorceForm.update({ ...req.body, userId: req.user.id }, { where: { id: req.params.id } });
+        await MutualDivorceForm.update({ ...req.body }, { where: { id: req.params.id, userId: req.user.id } });
         res.status(200).json({
             success: true,
             message: "She's details submited successfully!",
@@ -94,18 +94,79 @@ exports.createSheDetails = async (req, res) => {
     }
 }
 
-// exports.getAllMutualDivorceForm = async (req, res) => {
-//     try {
-//         const mutualDivorceForm = await MutualDivorceForm.findAll();
-//         res.status(200).json({
-//             success: true,
-//             message: "Mutual divorce form fetched successfully!",
-//             data: mutualDivorceForm
-//         });
-//     } catch (err) {
-//         res.status(500).json({
-//             success: false,
-//             message: err.message
-//         });
-//     }
-// }
+exports.createRequiredDetails = async (req, res) => {
+    try {
+        // Validate body
+        const { error } = createRequiredDetails(req.body);
+        if (error) {
+            console.log(error);
+            return res.status(400).json(error.details[0].message);
+        }
+        // if (doYouHave_Children === true) {
+        //     if (!childInformation_Settlement) {
+        //         return res.status(400).json({
+        //             success: false,
+        //             message: "Child Settlement is required!"
+        //         });
+        //     }
+        // }
+        // if (is_MaintenanceAlimony === true) {
+        //     if (!maintenance_Settlement_Term) {
+        //         return res.status(400).json({
+        //             success: false,
+        //             message: "Maintenance settlement term is required!"
+        //         });
+        //     }
+        // }
+        // if (is_SettlementRegardingJointAssets === true) {
+        //     if (!joint_Assets_Settlement_Term) {
+        //         return res.status(400).json({
+        //             success: false,
+        //             message: "Joint asstes settlement is required!"
+        //         });
+        //     }
+        // }
+        await MutualDivorceForm.update({ ...req.body }, { where: { id: req.params.id, userId: req.user.id } });
+        res.status(200).json({
+            success: true,
+            message: "Required details submited successfully!"
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: err.message
+        });
+    }
+}
+
+exports.getAllMutualDivorceForm = async (req, res) => {
+    try {
+        const mutualDivorceForm = await MutualDivorceForm.findAll();
+        res.status(200).json({
+            success: true,
+            message: "Mutual divorce form fetched successfully!",
+            data: mutualDivorceForm
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: err.message
+        });
+    }
+}
+
+exports.getAllMutualDivorceFormForUser = async (req, res) => {
+    try {
+        const mutualDivorceForm = await MutualDivorceForm.findAll({ where: { userId: req.user.id } });
+        res.status(200).json({
+            success: true,
+            message: "Mutual divorce form fetched successfully!",
+            data: mutualDivorceForm
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: err.message
+        });
+    }
+}

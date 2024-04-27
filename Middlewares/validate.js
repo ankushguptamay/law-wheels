@@ -97,3 +97,19 @@ exports.createSheDetails = (data) => {
     });
     return schema.validate(data);
 }
+
+exports.createRequiredDetails = (data) => {
+    const schema = joi.object().keys({
+        cityOfMarriage: joi.string().required(),
+        marriage_date: joi.string().required(),
+        placeOfMarriage: joi.string().required(),
+        he_post_marriage_address: joi.string().required(),
+        she_post_marriage_address: joi.string().required(),
+        doYouHave_children: joi.boolean().required(),
+        is_maintenanceAlimony: joi.boolean().required(),
+        is_settlementRegardingJointAssets: joi.boolean().required(),
+        any_pending_ligitations: joi.boolean().required(),
+        comment: joi.string().required()
+    });
+    return schema.validate(data);
+}

@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const { register, loginUser, otpVerification, getUser } = require('../Controllers/userController');
-const { createHeDetails, createSheDetails } = require('../Controllers/mutualDivorceFormController');
+const { createHeDetails, createSheDetails, createRequiredDetails, getAllMutualDivorceFormForUser } = require('../Controllers/mutualDivorceFormController');
 
 //middleware
 const { verifyUserToken } = require('../Middlewares/verifyJWT');
@@ -16,5 +16,8 @@ router.get("/getUser", verifyUserToken, getUser);
 // Divorce Form
 router.post("/createHeDetail", verifyUserToken, isUserPresent, createHeDetails);
 router.post("/createSheDetail/:id", verifyUserToken, isUserPresent, createSheDetails);
+router.post("/createRequiredDetails/:id", verifyUserToken, isUserPresent, createRequiredDetails);
+
+router.get("/mutualDivorceDetail/:id", verifyUserToken, isUserPresent, getAllMutualDivorceFormForUser);
 
 module.exports = router;
