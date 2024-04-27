@@ -209,14 +209,49 @@ exports.getUser = async (req, res) => {
 
 exports.getAllUser = async (req, res) => {
     try {
+        const { page, limit, search } = req.query;
+        // Pagination
+        const recordLimit = parseInt(limit) || 10;
+        let offSet = 0;
+        let currentPage = 1;
+        if (page) {
+            offSet = (parseInt(page) - 1) * recordLimit;
+            currentPage = parseInt(page);
+        }
+        const condition = [];
+        // Search
+        if (search) {
+            condition.push({
+                [Op.or]: [
+                    { name: { [Op.substring]: search } },
+                    { mobileNumber: { [Op.substring]: search } },
+                    { email: { [Op.substring]: search } }
+                ]
+            })
+        }
+        // Count All User
+        const totalUser = await User.count({
+            where: {
+                [Op.and]: condition
+            }
+        });
+        // Get All user
         const user = await User.findAll({
+            limit: recordLimit,
+            offset: offSet,
+            where: {
+                [Op.and]: condition
+            },
             order: [
                 ['createdAt', 'DESC']
             ]
         });
-        res.status(200).json({
+        // Final response
+        res.status(200).send({
             success: true,
-            message: "All User fetched successfully!",
+            message: "User fetched successfully!",
+            totalPage: Math.ceil(totalUser / recordLimit),
+            currentPage: currentPage,
             data: user
         });
     } catch (err) {
