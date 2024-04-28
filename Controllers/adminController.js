@@ -1,7 +1,7 @@
 const db = require('../Models');
 const Admin = db.admin;
 const { validateAdminLogin, validateAdminRegistration, changePassword } = require("../Middlewares/validate");
-const { JWT_SECRET_KEY, JWT_VALIDITY } = process.env;
+const { JWT_SECRET_KEY_ADMIN, JWT_VALIDITY } = process.env;
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const { Op } = require("sequelize");
@@ -37,7 +37,7 @@ exports.registerAdmin = async (req, res) => {
         }
         const authToken = jwt.sign(
             data,
-            JWT_SECRET_KEY,
+            JWT_SECRET_KEY_ADMIN,
             { expiresIn: JWT_VALIDITY } // five day
         );
         res.status(200).json({
@@ -87,7 +87,7 @@ exports.loginAdmin = async (req, res) => {
         }
         const authToken = jwt.sign(
             data,
-            JWT_SECRET_KEY,
+            JWT_SECRET_KEY_ADMIN,
             { expiresIn: JWT_VALIDITY } // five day
         );
         res.status(200).json({
@@ -143,7 +143,7 @@ exports.changePassword = async (req, res) => {
         }
         const authToken = jwt.sign(
             data,
-            JWT_SECRET_KEY,
+            JWT_SECRET_KEY_ADMIN,
             { expiresIn: JWT_VALIDITY } // five day
         );
         res.status(200).json({
