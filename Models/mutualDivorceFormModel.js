@@ -68,10 +68,7 @@ module.exports = (sequelize, DataTypes) => {
         placeOfMarriage: {
             type: DataTypes.STRING
         },
-        he_post_marriage_address: {
-            type: DataTypes.STRING(1234)
-        },
-        she_post_marriage_address: {
+        post_marriage_address: {
             type: DataTypes.STRING(1234)
         },
         doYouHave_children: {
