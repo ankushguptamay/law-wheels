@@ -22,6 +22,8 @@ db.user = require('./userModel.js')(sequelize, Sequelize);
 db.mutualDivorceForm = require('./mutualDivorceFormModel.js')(sequelize, Sequelize);
 db.emailOTP = require('./emailOTPModel.js')(sequelize, Sequelize);
 
+db.trandingOfferImage = require('./Master/trandingOfferImageModel.js')(sequelize, Sequelize);
+
 db.user.hasMany(db.mutualDivorceForm, { foreignKey: 'userId', as: 'mutualDivorceForms' });
 db.mutualDivorceForm.belongsTo(db.user, { foreignKey: 'userId', as: 'user' });
 
