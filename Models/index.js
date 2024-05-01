@@ -28,6 +28,6 @@ db.banner = require('./Master/bannerModel.js')(sequelize, Sequelize);
 db.user.hasMany(db.mutualDivorceForm, { foreignKey: 'userId', as: 'mutualDivorceForms' });
 db.mutualDivorceForm.belongsTo(db.user, { foreignKey: 'userId', as: 'user' });
 
-queryInterface.dropTable("trandingOfferImages").then((res) => { console.log("trandingOfferImages Droped!") }).catch((err) => { console.log(err) });
+// queryInterface.dropTable("trandingOfferImages").then((res) => { console.log("trandingOfferImages Droped!") }).catch((err) => { console.log(err) });
 
 module.exports = db;
