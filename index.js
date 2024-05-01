@@ -25,6 +25,8 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use('/files', express.static('./Resource'));
+
 app.use("/api/admin", admin);
 app.use("/api/user", user);
 

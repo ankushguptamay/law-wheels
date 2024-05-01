@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    const TrandingOfferImage = sequelize.define("trandingOfferImages", {
+    const Banner = sequelize.define("banners", {
         id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
@@ -13,9 +13,15 @@ module.exports = (sequelize, DataTypes) => {
         },
         fileName: {
             type: DataTypes.STRING(1234)
+        },
+        bannerType: {
+            type: DataTypes.STRING,
+            validate: {
+                isIn: [['HomeScreen', 'MutualDivorce', 'MutualDivorceDetails']]
+            }
         }
     }, {
         paranoid: true
     });
-    return TrandingOfferImage;
+    return Banner;
 };

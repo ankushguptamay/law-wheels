@@ -3,7 +3,7 @@ const router = express.Router();
 
 const { register, loginUser, otpVerification, getUser } = require('../Controllers/userController');
 const { createHeDetails, createSheDetails, createRequiredDetails, getAllMutualDivorceFormForUser } = require('../Controllers/mutualDivorceFormController');
-const { getTrandingImage } = require('../Controllers/Master/trandingOfferImageController');
+const { getHomeScreen, getMutualDivorce, getMutualDivorceDetail } = require('../Controllers/Master/bannerController');
 
 //middleware
 const { verifyUserToken } = require('../Middlewares/verifyJWT');
@@ -21,7 +21,9 @@ router.post("/createRequiredDetails/:id", verifyUserToken, isUserPresent, create
 
 router.get("/mutualDivorceDetail/:id", verifyUserToken, isUserPresent, getAllMutualDivorceFormForUser);
 
-// Tranding Offer Image
-router.post("/trandingOfferImages", getTrandingImage);
+// Banner
+router.get("/homeScreenBanners", getHomeScreen);
+router.get("/mutualDivorceBanners", getMutualDivorce);
+router.get("/mutualDivorceDetailBanners", getMutualDivorceDetail);
 
 module.exports = router;
