@@ -19,7 +19,7 @@ router.post("/createHeDetail", verifyUserToken, isUserPresent, createHeDetails);
 router.post("/createSheDetail/:id", verifyUserToken, isUserPresent, createSheDetails);
 router.post("/createRequiredDetails/:id", verifyUserToken, isUserPresent, createRequiredDetails);
 
-router.get("/mutualDivorceDetail/:id", verifyUserToken, isUserPresent, getAllMutualDivorceFormForUser);
+router.get("/mutualDivorceDetail", verifyUserToken, isUserPresent, getAllMutualDivorceFormForUser);
 
 // Banner
 router.get("/homeScreenBanners", getHomeScreen);
