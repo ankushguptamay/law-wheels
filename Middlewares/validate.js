@@ -47,7 +47,7 @@ exports.changePassword = (data) => {
 exports.userRegistration = (data) => {
     const schema = joi.object().keys({
         name: joi.string().min(3).max(30).required(),
-        email: joi.string().email().optional().label('Email'),
+        email: joi.string().email().required().label('Email'),
         mobileNumber: joi.string().length(10).pattern(/^[0-9]+$/).required()
     }).options({ allowUnknown: true });
     return schema.validate(data);
@@ -78,7 +78,8 @@ exports.createHeDetails = (data) => {
         he_email: joi.string().email().required().label('Email'),
         he_dateOfBirth: joi.string().required(),
         he_residence_address: joi.string().required(),
-        he_present_address: joi.string().required()
+        he_present_address: joi.string().required(),
+        divorceId: joi.string().optional()
     });
     return schema.validate(data);
 }
@@ -93,7 +94,8 @@ exports.createSheDetails = (data) => {
         she_email: joi.string().email().required().label('Email'),
         she_dateOfBirth: joi.string().required(),
         she_residence_address: joi.string().required(),
-        she_present_address: joi.string().required()
+        she_present_address: joi.string().required(),
+        divorceId: joi.string().optional()
     });
     return schema.validate(data);
 }

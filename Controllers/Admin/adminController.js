@@ -1,6 +1,6 @@
-const db = require('../Models');
+const db = require('../../Models');
 const Admin = db.admin;
-const { validateAdminLogin, validateAdminRegistration, changePassword } = require("../Middlewares/validate");
+const { validateAdminLogin, validateAdminRegistration, changePassword } = require("../../Middlewares/validate");
 const { JWT_SECRET_KEY_ADMIN, JWT_VALIDITY } = process.env;
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");

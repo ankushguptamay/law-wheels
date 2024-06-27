@@ -1,14 +1,14 @@
-const db = require('../Models');
+const db = require('../../Models');
 const User = db.user;
 const UserOTP = db.emailOTP;
-const { otpVerification, userLogin, userRegistration } = require("../Middlewares/validate");
+const { otpVerification, userLogin, userRegistration } = require("../../Middlewares/validate");
 const { JWT_SECRET_KEY_USER, JWT_VALIDITY, OTP_DIGITS_LENGTH, OTP_VALIDITY } = process.env;
 const jwt = require("jsonwebtoken");
 const bcrypt = require('bcryptjs');
 const { Op } = require("sequelize");
-const generateOTP = require('../Util/generateOTP');
-const { sendOTP } = require('../Util/sendOTPToMobileNumber');
-const { capitalizeFirstLetter } = require("../Util/capitalizeFirstLetter")
+const generateOTP = require('../../Util/generateOTP');
+const { sendOTP } = require('../../Util/sendOTPToMobileNumber');
+const { capitalizeFirstLetter } = require("../../Util/capitalizeFirstLetter")
 
 exports.register = async (req, res) => {
     try {
@@ -23,7 +23,10 @@ exports.register = async (req, res) => {
         // Check Duplicacy
         const isUser = await User.findOne({
             where: {
-                mobileNumber: req.body.mobileNumber
+                [Op.or]: [
+                    { mobileNumber: req.body.mobileNumber },
+                    { email: req.body.email }
+                ]
             }
         });
         if (isUser) {
@@ -36,7 +39,8 @@ exports.register = async (req, res) => {
         // Save in DataBase
         const user = await User.create({
             name: name,
-            mobileNumber: req.body.mobileNumber
+            mobileNumber: req.body.mobileNumber,
+            email: req.body.email
         });
         // Generate OTP for Email
         const otp = generateOTP.generateFixedLengthRandomNumber(OTP_DIGITS_LENGTH);

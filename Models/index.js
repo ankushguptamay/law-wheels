@@ -18,10 +18,10 @@ const queryInterface = sequelize.getQueryInterface();
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.admin = require('./adminModel.js')(sequelize, Sequelize);
-db.user = require('./userModel.js')(sequelize, Sequelize);
-db.mutualDivorceForm = require('./mutualDivorceFormModel.js')(sequelize, Sequelize);
-db.emailOTP = require('./emailOTPModel.js')(sequelize, Sequelize);
+db.admin = require('./Admin/adminModel.js')(sequelize, Sequelize);
+db.user = require('./User/userModel.js')(sequelize, Sequelize);
+db.mutualDivorceForm = require('./User/mutualDivorceFormModel.js')(sequelize, Sequelize);
+db.emailOTP = require('./User/emailOTPModel.js')(sequelize, Sequelize);
 
 db.banner = require('./Master/bannerModel.js')(sequelize, Sequelize);
 

@@ -34,6 +34,5 @@ exports.verifyUserToken = (req, res, next) => {
         }
         req.user = decoded;
         next();
-    }
-    );
+    });
 };

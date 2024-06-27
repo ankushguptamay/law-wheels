@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
-const { registerAdmin, loginAdmin, changePassword, updateAdminName, getAdmin } = require('../Controllers/adminController');
-const { getAllMutualDivorceForm } = require('../Controllers/mutualDivorceFormController');
-const { getAllUser } = require('../Controllers/userController');
+const { registerAdmin, loginAdmin, changePassword, updateAdminName, getAdmin } = require('../Controllers/Admin/adminController');
+const { getAllMutualDivorceForm } = require('../Controllers/User/DivorceForm/getMDFormController');
+const { getAllUser } = require('../Controllers/User/userController');
 const { addBanner, softDeleteBanner, getHomeScreen, getMutualDivorce, getMutualDivorceDetail } = require('../Controllers/Master/bannerController');
 
 //middleware
