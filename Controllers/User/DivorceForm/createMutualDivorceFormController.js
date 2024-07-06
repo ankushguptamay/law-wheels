@@ -117,7 +117,7 @@ exports.createHeDetailsByWebSite = async (req, res) => {
         let divorce;
         if (!divorceId) {
             // FindUser
-            const isUser = await User.findOne({
+            let user = await User.findOne({
                 where: {
                     [Op.or]: [
                         { mobileNumber: req.body.he_mobileNumber },
@@ -125,18 +125,14 @@ exports.createHeDetailsByWebSite = async (req, res) => {
                     ]
                 }
             });
-            if (isUser) {
-                return res.status(400).json({
-                    success: false,
-                    message: "USEREXIST!"
+            if (!user) {
+                // Save in DataBase
+                user = await User.create({
+                    name: he_name,
+                    mobileNumber: he_mobileNumber,
+                    email: he_email
                 });
             }
-            // Save in DataBase
-            const user = await User.create({
-                name: he_name,
-                mobileNumber: he_mobileNumber,
-                email: he_email
-            });
             divorce = await MutualDivorceForm.create({
                 he_city: he_city,
                 he_dateOfBirth: he_dateOfBirth,
@@ -203,7 +199,7 @@ exports.createSheDetailsByWebSite = async (req, res) => {
         let divorce;
         if (!divorceId) {
             // FindUser
-            const isUser = await User.findOne({
+            let user = await User.findOne({
                 where: {
                     [Op.or]: [
                         { mobileNumber: she_mobileNumber },
@@ -211,18 +207,14 @@ exports.createSheDetailsByWebSite = async (req, res) => {
                     ]
                 }
             });
-            if (isUser) {
-                return res.status(400).json({
-                    success: false,
-                    message: "USEREXIST!"
+            if (!user) {
+                // Save in DataBase
+                user = await User.create({
+                    name: she_name,
+                    mobileNumber: she_mobileNumber,
+                    email: she_email
                 });
             }
-            // Save in DataBase
-            const user = await User.create({
-                name: she_name,
-                mobileNumber: she_mobileNumber,
-                email: she_email
-            });
             divorce = await MutualDivorceForm.create({
                 she_dateOfBirth: she_dateOfBirth,
                 she_email: she_email,
