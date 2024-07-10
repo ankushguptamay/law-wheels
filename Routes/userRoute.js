@@ -21,9 +21,9 @@ router.post("/createSheDetail/:id", verifyUserToken, isUserPresent, createSheDet
 router.post("/createRequiredDetails/:id", verifyUserToken, isUserPresent, createRequiredDetails);
 
 // Divorce Form When user is not loged In For website
-router.post("/createHeDetail", createHeDetailsByWebSite);
-router.post("/createSheDetail", createSheDetailsByWebSite);
-router.post("/createRequiredDetails/:id", createRequiredDetailsByWebSite);
+router.post("/createHeDetailsByWebSite", createHeDetailsByWebSite);
+router.post("/createSheDetailsByWebSite", createSheDetailsByWebSite);
+router.post("/createRequiredDetailsByWebSite/:id", createRequiredDetailsByWebSite);
 
 router.get("/mutualDivorceDetail", verifyUserToken, isUserPresent, getAllMutualDivorceFormForUser);
 
