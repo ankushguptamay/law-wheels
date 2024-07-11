@@ -145,7 +145,7 @@ exports.createHeDetailsByWebSite = async (req, res) => {
                 he_residence_address: he_residence_address,
                 userId: user.id
             });
-        } {
+        } else {
             // Find Divorce form
             divorce = await MutualDivorceForm.findOne({
                 where: {
