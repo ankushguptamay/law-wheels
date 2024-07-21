@@ -39,16 +39,16 @@ db.user.hasMany(db.mutualDivorceForm, {
 });
 db.mutualDivorceForm.belongsTo(db.user, { foreignKey: "userId", as: "user" });
 
-queryInterface
-  .addColumn("users", "joinByApp", {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false,
-  })
-  .then((res) => {
-    console.log("joinByApp!");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+// queryInterface
+//   .addColumn("users", "joinByApp", {
+//     type: DataTypes.BOOLEAN,
+//     defaultValue: false,
+//   })
+//   .then((res) => {
+//     console.log("joinByApp!");
+//   })
+//   .catch((err) => {
+//     console.log(err);
+//   });
 
 module.exports = db;
