@@ -18,6 +18,6 @@ var storage = multer.diskStorage({
         callback(null, filename);
     }
 });
-uploadImage = multer({ storage: storage, fileFilter: filter });
+uploadImage = multer({ storage: storage, fileFilter: filter }); //limits: { fileSize: 1024 * 1024 * 1 } 1MB
 
 module.exports = uploadImage;
