@@ -29,6 +29,7 @@ db.mutualDivorceForm = require("./User/mutualDivorceFormModel.js")(
   sequelize,
   Sequelize
 );
+db.contactUsForm = require("./contactUsFormModel.js")(sequelize, Sequelize);
 db.emailOTP = require("./User/emailOTPModel.js")(sequelize, Sequelize);
 
 db.banner = require("./Master/bannerModel.js")(sequelize, Sequelize);
