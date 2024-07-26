@@ -150,9 +150,10 @@ exports.contactUsForm = (data) => {
     firstName: joi.string().min(3).max(30).required(),
     email: joi.string().email().required().label("Email"),
     lastName: joi.string().min(3).max(30).required(),
-    selectedDepartment: joi
+    mobileNumber: joi
       .string()
-      .valid("Sales", "Marketing", "Customer Support")
+      .length(10)
+      .pattern(/^[0-9]+$/)
       .required(),
     message: joi.string().min(20).max(1000).required(),
   });

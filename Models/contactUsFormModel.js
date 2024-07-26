@@ -14,11 +14,8 @@ module.exports = (sequelize, DataTypes) => {
     email: {
       type: DataTypes.STRING,
     },
-    selectedDepartment: {
+    mobileNumber: {
       type: DataTypes.STRING,
-      validate: {
-        isIn: [["Sales", "Marketing", "Customer Support"]],
-      },
     },
     message: {
       type: DataTypes.TEXT,
