@@ -159,3 +159,12 @@ exports.contactUsForm = (data) => {
   });
   return schema.validate(data);
 };
+
+exports.reachOutValidation = (data) => {
+  const schema = joi.object().keys({
+    name: joi.string().min(3).max(30).required(),
+    email: joi.string().email().required().label("Email"),
+    message: joi.string().min(20).max(1000).required(),
+  });
+  return schema.validate(data);
+};

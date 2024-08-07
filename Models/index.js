@@ -24,6 +24,7 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.admin = require("./Admin/adminModel.js")(sequelize, Sequelize);
+db.reachOut = require("./Admin/reachOutModel.js")(sequelize, Sequelize);
 db.user = require("./User/userModel.js")(sequelize, Sequelize);
 db.mutualDivorceForm = require("./User/mutualDivorceFormModel.js")(
   sequelize,

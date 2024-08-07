@@ -13,6 +13,7 @@ const {
   getMutualDivorceFormUserId,
 } = require("../Controllers/User/DivorceForm/getMDFormController");
 const { getAllUser } = require("../Controllers/User/userController");
+const { getAllReachOut } = require("../Controllers/Admin/reachOutController");
 const {
   getAllContactUsForm,
 } = require("../Controllers/Admin/cantactUsFormModel");
@@ -105,5 +106,8 @@ router.get(
   isAdminPresent,
   getAllContactUsForm
 );
+
+// reach Out
+router.get("/reachOut", verifyAdminToken, isAdminPresent, getAllReachOut);
 
 module.exports = router;

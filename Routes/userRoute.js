@@ -21,6 +21,7 @@ const {
 const {
   createContactUsForm,
 } = require("../Controllers/Admin/cantactUsFormModel");
+const { createReachOut } = require("../Controllers/Admin/reachOutController");
 const {
   getHomeScreen,
   getMutualDivorce,
@@ -73,5 +74,8 @@ router.get("/mutualDivorceDetailBanners", getMutualDivorceDetail);
 
 // Contact Us
 router.post("/contactUsForm", createContactUsForm);
+
+// Reach out
+router.post("/reachOut", createReachOut);
 
 module.exports = router;
