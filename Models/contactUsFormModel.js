@@ -17,6 +17,13 @@ module.exports = (sequelize, DataTypes) => {
     mobileNumber: {
       type: DataTypes.STRING,
     },
+    data_from_page: {
+      type: DataTypes.STRING,
+      validate: {
+        isIn: [["Mutual Divorce", "Others"]],
+      },
+      defaultValue: "Others",
+    },
     message: {
       type: DataTypes.TEXT,
     },

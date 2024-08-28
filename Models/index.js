@@ -42,19 +42,15 @@ db.user.hasMany(db.mutualDivorceForm, {
 db.mutualDivorceForm.belongsTo(db.user, { foreignKey: "userId", as: "user" });
 
 // queryInterface
-//   .addColumn("contactUsForms", "mobileNumber", {
+//   .addColumn("contactUsForms", "data_from_page", {
 //     type: DataTypes.STRING,
+//     validate: {
+//       isIn: [["Mutual Divorce", "Others"]],
+//     },
+//     defaultValue: "Others",
 //   })
 //   .then((res) => {
 //     console.log("added!");
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//   });
-// queryInterface
-//   .removeColumn("contactUsForms", "selectedDepartment")
-//   .then((res) => {
-//     console.log("remove!");
 //   })
 //   .catch((err) => {
 //     console.log(err);
