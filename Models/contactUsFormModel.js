@@ -50,7 +50,7 @@ module.exports = (sequelize, DataTypes) => {
     if (lastSlug) {
       lastDigit = parseInt(lastSlug.dataValues.slug.substring(8)) + 1;
     } else {
-      lastDigit = 0;
+      lastDigit = 1;
     }
 
     let uniqueSlug = startWith + lastDigit;
