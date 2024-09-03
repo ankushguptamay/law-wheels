@@ -12,10 +12,11 @@ const {
   getAllMutualDivorceForm,
   getMutualDivorceFormUserId,
 } = require("../Controllers/User/DivorceForm/getMDFormController");
-const { getAllUser } = require("../Controllers/User/userController");
+const { getAllUser, heartAPI } = require("../Controllers/User/userController");
 const { getAllReachOut } = require("../Controllers/Admin/reachOutController");
 const {
   getAllContactUsForm,
+  getContactUsAnalytics,
 } = require("../Controllers/Admin/cantactUsFormModel");
 const {
   addBanner,
@@ -109,5 +110,16 @@ router.get(
 
 // reach Out
 router.get("/reachOut", verifyAdminToken, isAdminPresent, getAllReachOut);
+
+// Dashboard
+router.get(
+  "/contactDashboard",
+  verifyAdminToken,
+  isAdminPresent,
+  getContactUsAnalytics
+);
+
+// Heart
+router.get("/heartAPI", heartAPI);
 
 module.exports = router;

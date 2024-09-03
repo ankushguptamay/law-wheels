@@ -268,3 +268,18 @@ exports.getAllUser = async (req, res) => {
     });
   }
 };
+
+exports.heartAPI = async (req, res) => {
+  try {
+    await User.findOne({ where: { id: "nja" } });
+    res.status(200).json({
+      success: true,
+      message: "Heart API fired!",
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
