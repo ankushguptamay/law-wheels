@@ -1,3 +1,5 @@
+const { Op } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
   const ContactUsForm = sequelize.define("contactUsForms", {
     id: {
@@ -10,6 +12,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     lastName: {
       type: DataTypes.STRING,
+    },
+    slug: {
+      type: DataTypes.STRING,
+      unique: true,
     },
     email: {
       type: DataTypes.STRING,
@@ -28,5 +34,34 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
     },
   });
+
+  const day = new Date().toISOString().slice(8, 10);
+  const year = new Date().toISOString().slice(2, 4);
+  const month = new Date().toISOString().slice(5, 7);
+
+  ContactUsForm.beforeCreate(async (contact) => {
+    let startWith = `LW${day}${month}${year}`;
+
+    const lastSlug = await ContactUsForm.findOne({
+      where: { slug: { [Op.startsWith]: startWith } },
+      order: [["createdAt", "DESC"]],
+    });
+    let lastDigit;
+    if (lastSlug) {
+      lastDigit = parseInt(lastSlug.dataValues.slug.substring(8)) + 1;
+    } else {
+      lastDigit = 0;
+    }
+
+    let uniqueSlug = startWith + lastDigit;
+
+    // Check if the slug already exists
+    while (await ContactUsForm.findOne({ where: { slug: uniqueSlug } })) {
+      uniqueSlug = `${startWith}${lastDigit++}`;
+    }
+
+    contact.slug = uniqueSlug;
+  });
+
   return ContactUsForm;
 };
