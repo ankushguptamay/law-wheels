@@ -85,7 +85,13 @@ exports.getContactUsAnalytics = async (req, res) => {
     const { past7Days, past14Days, past28Days, past90Days, past365Days } =
       req.query;
     const dayInMilliSecond = 1000 * 60 * 60 * 24;
+    
     const today = new Date();
+    today.setMinutes(today.getMinutes() + 330);
+    const day = String(today.getUTCDate()).padStart(2, "0");
+    const month = String(today.getUTCMonth() + 1).padStart(2, "0");
+    const year = today.getUTCFullYear();
+    const todayForData = new Date(`${year}-${month}-${day}T18:29:59.000Z`);
 
     // For Current
     const lastDays = new Date();
@@ -124,7 +130,8 @@ exports.getContactUsAnalytics = async (req, res) => {
 
     lastDaysContactUs.forEach((contact) => {
       const indexApprox =
-        (today.getTime() - contact.createdAt.getTime()) / dayInMilliSecond;
+        (todayForData.getTime() - contact.createdAt.getTime()) /
+        dayInMilliSecond;
       const index = Math.floor(indexApprox);
       contactUs[days - 1 - index]++;
     });
