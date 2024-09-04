@@ -85,7 +85,7 @@ exports.getContactUsAnalytics = async (req, res) => {
     const { past7Days, past14Days, past28Days, past90Days, past365Days } =
       req.query;
     const dayInMilliSecond = 1000 * 60 * 60 * 24;
-    
+
     const today = new Date();
     today.setMinutes(today.getMinutes() + 330);
     const day = String(today.getUTCDate()).padStart(2, "0");
