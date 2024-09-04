@@ -12,7 +12,7 @@ const {
   getAllMutualDivorceForm,
   getMutualDivorceFormUserId,
 } = require("../Controllers/User/DivorceForm/getMDFormController");
-const { getAllUser, heartAPI } = require("../Controllers/User/userController");
+const { getAllUser } = require("../Controllers/User/userController");
 const { getAllReachOut } = require("../Controllers/Admin/reachOutController");
 const {
   getAllContactUsForm,
@@ -118,8 +118,5 @@ router.get(
   isAdminPresent,
   getContactUsAnalytics
 );
-
-// Heart
-router.get("/heartAPI", heartAPI);
 
 module.exports = router;

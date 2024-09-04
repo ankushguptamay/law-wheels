@@ -6,6 +6,7 @@ const {
   loginUser,
   otpVerification,
   getUser,
+  heartAPI,
 } = require("../Controllers/User/userController");
 const {
   createHeDetails,
@@ -77,5 +78,8 @@ router.post("/contactUsForm", createContactUsForm);
 
 // Reach out
 router.post("/reachOut", createReachOut);
+
+// Heart
+router.get("/heartAPI", heartAPI);
 
 module.exports = router;
