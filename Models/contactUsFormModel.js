@@ -35,9 +35,12 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
 
-  const day = new Date().toISOString().slice(8, 10);
-  const year = new Date().toISOString().slice(2, 4);
-  const month = new Date().toISOString().slice(5, 7);
+  const today = new Date();
+  today.setMinutes(today.getMinutes() + 330);
+
+  const day = today.toISOString().slice(8, 10);
+  const year = today.toISOString().slice(2, 4);
+  const month = today.toISOString().slice(5, 7);
 
   ContactUsForm.beforeCreate(async (contact) => {
     let startWith = `LW${day}${month}${year}`;

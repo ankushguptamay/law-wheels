@@ -4,9 +4,9 @@ const bodyParser = require('body-parser');
 const cors = require("cors");
 const admin = require('./Routes/adminRoute');
 const user = require('./Routes/userRoute');
-const os = require('os');
-const cpus = os.cpus().length;
-console.log(cpus);
+// const os = require('os');
+// const cpus = os.cpus().length;
+// console.log(cpus);
 
 const app = express();
 

@@ -95,7 +95,9 @@ exports.getContactUsAnalytics = async (req, res) => {
 
     // For Current
     const lastDays = new Date();
+    lastDays.setMinutes(lastDays.getMinutes() + 330);
     const compareLastDays = new Date();
+    compareLastDays.setMinutes(compareLastDays.getMinutes() + 330);
     let query, contactUs, message, pastQuery, days;
 
     if (past14Days) {
