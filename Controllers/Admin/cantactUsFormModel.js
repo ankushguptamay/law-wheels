@@ -26,15 +26,7 @@ exports.createContactUsForm = async (req, res) => {
 
 exports.getAllContactUsForm = async (req, res) => {
   try {
-    const { page, limit, search, isMutual, others } = req.query;
-    // Pagination
-    const recordLimit = parseInt(limit) || 10;
-    let offSet = 0;
-    let currentPage = 1;
-    if (page) {
-      offSet = (parseInt(page) - 1) * recordLimit;
-      currentPage = parseInt(page);
-    }
+    const { page, limit, search, isMutual, others, excel } = req.query;
 
     // Search
     const query = [];
@@ -55,23 +47,44 @@ exports.getAllContactUsForm = async (req, res) => {
       query.push({ data_from_page: "Others" });
     }
 
-    const [contactUs, totalContactUs] = await Promise.all([
-      ContactUsForm.findAll({
-        limit: recordLimit,
-        offset: offSet,
+    if (excel) {
+      const contactUs = await ContactUsForm.findAll({
         where: { [Op.and]: query },
         order: [["createdAt", "DESC"]],
-      }),
-      ContactUsForm.count({ where: { [Op.and]: query } }),
-    ]);
+      });
+      res.status(200).json({
+        success: true,
+        message: "Contact us form fetched successfully!",
+        data: contactUs,
+      });
+    } else {
+      // Pagination
+      const recordLimit = parseInt(limit) || 10;
+      let offSet = 0;
+      let currentPage = 1;
+      if (page) {
+        offSet = (parseInt(page) - 1) * recordLimit;
+        currentPage = parseInt(page);
+      }
 
-    res.status(200).json({
-      success: true,
-      message: "Contact us form fetched successfully!",
-      totalPage: Math.ceil(totalContactUs / recordLimit),
-      currentPage: currentPage,
-      data: contactUs,
-    });
+      const [contactUs, totalContactUs] = await Promise.all([
+        ContactUsForm.findAll({
+          limit: recordLimit,
+          offset: offSet,
+          where: { [Op.and]: query },
+          order: [["createdAt", "DESC"]],
+        }),
+        ContactUsForm.count({ where: { [Op.and]: query } }),
+      ]);
+
+      res.status(200).json({
+        success: true,
+        message: "Contact us form fetched successfully!",
+        totalPage: Math.ceil(totalContactUs / recordLimit),
+        currentPage: currentPage,
+        data: contactUs,
+      });
+    }
   } catch (err) {
     res.status(500).json({
       success: false,
