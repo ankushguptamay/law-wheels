@@ -26,7 +26,17 @@ exports.createContactUsForm = async (req, res) => {
 
 exports.getAllContactUsForm = async (req, res) => {
   try {
-    const { page, limit, search, isMutual, others, excel } = req.query;
+    const {
+      page,
+      limit,
+      search,
+      isMutual,
+      others,
+      excel,
+      startDate,
+      endDate,
+      date,
+    } = req.query;
 
     // Search
     const query = [];
@@ -45,6 +55,21 @@ exports.getAllContactUsForm = async (req, res) => {
       query.push({ data_from_page: "Mutual Divorce" });
     } else if (others) {
       query.push({ data_from_page: "Others" });
+    }
+
+    // Date
+    if (startDate && endDate) {
+      const start = new Date(startDate);
+      start.setMinutes(start.getMinutes() + 330);
+      const end = new Date(endDate);
+      end.setMinutes(end.getMinutes() + 330);
+      query.push({ createdAt: { [Op.between]: [start, end] } });
+    } else if (date) {
+      const start = new Date(`${date}T00:00:01.000Z`);
+      start.setMinutes(start.getMinutes() + 330);
+      const end = new Date(`${date}T23:59:59.000Z`);
+      end.setMinutes(end.getMinutes() + 330);
+      query.push({ createdAt: { [Op.between]: [start, end] } });
     }
 
     if (excel) {
