@@ -51,15 +51,15 @@ db.contactUsForm.belongsTo(db.employee, {
   as: "employee",
 });
 
-// queryInterface
-//   .addColumn("contactUsForms", "employeeId", {
-//     type: DataTypes.UUID,
-//     references: { model: "employees", key: "id" },
-//   })
-//   .then((res) => {
-//     console.log("added!");
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//   });
+queryInterface
+  .addColumn("contactUsForms", "employeeId", {
+    type: DataTypes.UUID,
+    references: { model: "employees", key: "id" },
+  })
+  .then((res) => {
+    console.log("added!");
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 module.exports = db;

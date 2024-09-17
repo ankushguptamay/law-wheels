@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-  const BlogCategories = sequelize.define(
-    "blogCategories",
+  const BlogTag = sequelize.define(
+    "blogTags",
     {
       id: {
         type: DataTypes.UUID,
@@ -19,17 +19,8 @@ module.exports = (sequelize, DataTypes) => {
       },
       description: {
         type: DataTypes.STRING(1234),
-      },
-      fileName: {
-        type: DataTypes.STRING,
-      },
-      url: {
-        type: DataTypes.STRING(1234),
-      },
-      sort_order: {
-        type: DataTypes.INTEGER,
-      },
+      }
     }
   );
-  return BlogCategories;
+  return BlogTag;
 };
