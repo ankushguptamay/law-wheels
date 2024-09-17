@@ -169,3 +169,23 @@ exports.reachOutValidation = (data) => {
   });
   return schema.validate(data);
 };
+
+exports.validateEmployeeRegistration = (data) => {
+  const schema = joi.object().keys({
+    name: joi.string().min(3).max(30).required(),
+    email: joi.string().email().required().label("Email"),
+    role: joi.string().valid("BDA", "Blogger").required(),
+    mobileNumber: joi
+      .string()
+      .length(10)
+      .pattern(/^[0-9]+$/)
+      .required(),
+    password: joi
+      .string()
+      // .regex(RegExp(pattern))
+      .required()
+      .min(8)
+      .max(20),
+  });
+  return schema.validate(data);
+};

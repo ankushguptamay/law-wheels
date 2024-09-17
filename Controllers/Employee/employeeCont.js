@@ -1,8 +1,8 @@
 const db = require("../../Models");
-const Admin = db.admin;
+const Employee = db.employee;
 const {
   validateAdminLogin,
-  validateAdminRegistration,
+  validateEmployeeRegistration,
   changePassword,
 } = require("../../Middlewares/validate");
 const { JWT_SECRET_KEY_ADMIN, JWT_VALIDITY } = process.env;
@@ -12,42 +12,33 @@ const { Op } = require("sequelize");
 
 const SALT = 10;
 
-exports.registerAdmin = async (req, res) => {
+exports.registerEmployee = async (req, res) => {
   try {
-    const { error } = validateAdminRegistration(req.body);
+    const { error } = validateEmployeeRegistration(req.body);
     if (error) {
       return res.status(400).json(error.details[0].message);
     }
-    const isAdmin = await Admin.findOne({
+    const isEmployee = await Employee.findOne({
       where: {
         email: req.body.email,
       },
     });
-    if (isAdmin) {
+    if (isEmployee) {
       return res.status(400).json({
         success: false,
-        message: "Admin already present!",
+        message: "These credentials already exist!",
       });
     }
     const salt = await bcrypt.genSalt(SALT);
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
-    const admin = await Admin.create({
+    await Employee.create({
       ...req.body,
       password: hashedPassword,
     });
-    const data = {
-      id: admin.id,
-      email: req.body.email,
-    };
-    const authToken = jwt.sign(
-      data,
-      JWT_SECRET_KEY_ADMIN,
-      { expiresIn: JWT_VALIDITY } // five day
-    );
+
     res.status(200).json({
       success: true,
       message: "Register successfully!",
-      authToken: authToken,
     });
   } catch (err) {
     res.status(500).json({
@@ -57,19 +48,19 @@ exports.registerAdmin = async (req, res) => {
   }
 };
 
-exports.loginAdmin = async (req, res) => {
+exports.loginEmployee = async (req, res) => {
   try {
     const { error } = validateAdminLogin(req.body);
     if (error) {
       console.log(error);
       return res.status(400).json(error.details[0].message);
     }
-    const admin = await Admin.findOne({
+    const employee = await Employee.findOne({
       where: {
         email: req.body.email,
       },
     });
-    if (!admin) {
+    if (!employee) {
       return res.status(400).json({
         success: false,
         message: "Invalid email or password!",
@@ -77,7 +68,7 @@ exports.loginAdmin = async (req, res) => {
     }
     const validPassword = await bcrypt.compare(
       req.body.password,
-      admin.password
+      employee.password
     );
     if (!validPassword) {
       return res.status(400).json({
@@ -86,8 +77,9 @@ exports.loginAdmin = async (req, res) => {
       });
     }
     const data = {
-      id: admin.id,
+      id: employee.id,
       email: req.body.email,
+      role: employee.role,
     };
     const authToken = jwt.sign(
       data,
@@ -98,6 +90,7 @@ exports.loginAdmin = async (req, res) => {
       success: true,
       message: "Login successfully!",
       authToken: authToken,
+      data: employee,
     });
   } catch (err) {
     res.status(500).json({
@@ -114,12 +107,12 @@ exports.changePassword = async (req, res) => {
       console.log(error);
       return res.status(400).json(error.details[0].message);
     }
-    const admin = await Admin.findOne({
+    const employee = await Employee.findOne({
       where: {
         email: req.body.email,
       },
     });
-    if (!admin) {
+    if (!employee) {
       return res.status(400).json({
         success: false,
         message: "Invalid email or password!",
@@ -127,7 +120,7 @@ exports.changePassword = async (req, res) => {
     }
     const validPassword = await bcrypt.compare(
       req.body.oldPassword,
-      admin.password
+      employee.password
     );
     if (!validPassword) {
       return res.status(400).json({
@@ -137,13 +130,14 @@ exports.changePassword = async (req, res) => {
     }
     const salt = await bcrypt.genSalt(SALT);
     const hashedPassword = await bcrypt.hash(req.body.newPassword, salt);
-    await admin.update({
-      ...admin,
+    await employee.update({
+      ...employee,
       password: hashedPassword,
     });
     const data = {
-      id: admin.id,
+      id: employee.id,
       email: req.body.email,
+      role: employee.role,
     };
     const authToken = jwt.sign(
       data,
@@ -163,27 +157,27 @@ exports.changePassword = async (req, res) => {
   }
 };
 
-exports.updateAdminName = async (req, res) => {
+exports.updateEmployeeName = async (req, res) => {
   try {
-    const admin = await Admin.findOne({
+    const employee = await Employee.findOne({
       where: {
-        [Op.and]: [{ id: req.admin.id }, { email: req.admin.email }],
+        [Op.and]: [{ id: req.employee.id }, { email: req.employee.email }],
       },
     });
-    if (!admin) {
+    if (!employee) {
       return res.status(400).json({
         success: false,
         message: "Your profile is not present! Are you register?.. ",
       });
     }
     const { name } = req.body;
-    await admin.update({
-      ...admin,
+    await employee.update({
+      ...employee,
       name: name,
     });
     res.status(200).json({
       success: true,
-      message: "Admin updated successfully!",
+      message: "Name updated successfully!",
     });
   } catch (err) {
     res.status(500).json({
@@ -193,24 +187,24 @@ exports.updateAdminName = async (req, res) => {
   }
 };
 
-exports.getAdmin = async (req, res) => {
+exports.getEmployee = async (req, res) => {
   try {
-    const admin = await Admin.findOne({
+    const employee = await Employee.findOne({
       where: {
-        [Op.and]: [{ id: req.admin.id }, { email: req.admin.email }],
+        [Op.and]: [{ id: req.employee.id }, { email: req.employee.email }],
       },
       attributes: { exclude: ["password"] },
     });
-    if (!admin) {
+    if (!employee) {
       return res.status(400).json({
         success: false,
-        message: "Admin is not present!",
+        message: "Employee is not present!",
       });
     }
     res.status(200).json({
       success: true,
-      message: "Admin Profile Fetched successfully!",
-      data: admin,
+      message: "Employee Profile Fetched successfully!",
+      data: employee,
     });
   } catch (err) {
     res.status(500).json({

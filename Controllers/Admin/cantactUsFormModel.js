@@ -2,6 +2,7 @@ const db = require("../../Models");
 const { contactUsForm } = require("../../Middlewares/validate");
 const { Op } = require("sequelize");
 const ContactUsForm = db.contactUsForm;
+const Employee = db.employee;
 
 exports.createContactUsForm = async (req, res) => {
   try {
@@ -11,7 +12,48 @@ exports.createContactUsForm = async (req, res) => {
       // console.log(error);
       return res.status(400).json(error.details[0].message);
     }
-    await ContactUsForm.create(req.body);
+    const form = await ContactUsForm.create(req.body);
+
+    // Assign
+    const today = new Date();
+    today.setMinutes(today.getMinutes() - 1100);
+    const day = String(today.getUTCDate()).padStart(2, "0");
+    const month = String(today.getUTCMonth() + 1).padStart(2, "0");
+    const year = today.getUTCFullYear();
+    const todayForData = new Date(`${year}-${month}-${day}T18:29:59.000Z`);
+
+    const employee = await Employee.findAll({
+      where: { role: "BDA" },
+      order: [["createdAt", "ASC"]],
+    });
+
+    const totalBDA = employee.length;
+    if (totalBDA === 0) {
+      console.log("here");
+      return res.status(200).send({
+        success: true,
+        message: `Contact us form created successfully!`,
+      });
+    } else if (totalBDA === 1) {
+      await form.update({
+        employeeId: employee[0].id,
+      });
+    } else {
+      const todaysTotalTicket = await ContactUsForm.count({
+        where: { createdAt: { [Op.gte]: todayForData } },
+      });
+      const remain = parseInt(todaysTotalTicket) % parseInt(totalBDA);
+      if (remain === 0) {
+        const lastResolver = parseInt(totalBDA) - 1;
+        await form.update({
+          employeeId: employee[lastResolver].id,
+        });
+      } else {
+        await form.update({
+          employeeId: employee[remain - 1].id,
+        });
+      }
+    }
     res.status(200).json({
       success: true,
       message: "Contact us form created successfully!",
@@ -40,6 +82,7 @@ exports.getAllContactUsForm = async (req, res) => {
 
     // Search
     const query = [];
+
     if (search) {
       query.push({
         [Op.or]: [
@@ -59,16 +102,16 @@ exports.getAllContactUsForm = async (req, res) => {
 
     // Date
     if (startDate && endDate) {
-      const start = new Date(startDate);
-      start.setMinutes(start.getMinutes() + 330);
-      const end = new Date(endDate);
-      end.setMinutes(end.getMinutes() + 330);
+      const start = new Date(`${startDate}T00:00:01.000Z`);
+      start.setMinutes(start.getMinutes() - 330);
+      const end = new Date(`${endDate}T23:59:59.000Z`);
+      end.setMinutes(end.getMinutes() - 330);
       query.push({ createdAt: { [Op.between]: [start, end] } });
     } else if (date) {
       const start = new Date(`${date}T00:00:01.000Z`);
-      start.setMinutes(start.getMinutes() + 330);
+      start.setMinutes(start.getMinutes() - 330);
       const end = new Date(`${date}T23:59:59.000Z`);
-      end.setMinutes(end.getMinutes() + 330);
+      end.setMinutes(end.getMinutes() - 330);
       query.push({ createdAt: { [Op.between]: [start, end] } });
     }
 
@@ -182,6 +225,123 @@ exports.getContactUsAnalytics = async (req, res) => {
       chart: contactUs,
     };
     return res.status(200).json({ success: true, message, data: status });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+exports.getAllContactUsLeadBDA = async (req, res) => {
+  try {
+    const {
+      page,
+      limit,
+      search,
+      isMutual,
+      others,
+      excel,
+      startDate,
+      endDate,
+      date,
+    } = req.query;
+
+    // Search
+    const query = [{ employeeId: req.employee.id }];
+
+    if (search) {
+      query.push({
+        [Op.or]: [
+          { firstName: { [Op.substring]: search } },
+          { slug: { [Op.substring]: search } },
+          { lastName: { [Op.substring]: search } },
+          { email: { [Op.substring]: search } },
+          { mobileNumber: { [Op.substring]: search } },
+        ],
+      });
+    }
+    if (isMutual) {
+      query.push({ data_from_page: "Mutual Divorce" });
+    } else if (others) {
+      query.push({ data_from_page: "Others" });
+    }
+
+    // Date
+    if (startDate && endDate) {
+      const start = new Date(`${startDate}T00:00:01.000Z`);
+      start.setMinutes(start.getMinutes() - 330);
+      const end = new Date(`${endDate}T23:59:59.000Z`);
+      end.setMinutes(end.getMinutes() - 330);
+      query.push({ createdAt: { [Op.between]: [start, end] } });
+    } else if (date) {
+      const start = new Date(`${date}T00:00:01.000Z`);
+      start.setMinutes(start.getMinutes() - 330);
+      const end = new Date(`${date}T23:59:59.000Z`);
+      end.setMinutes(end.getMinutes() - 330);
+      query.push({ createdAt: { [Op.between]: [start, end] } });
+    }
+
+    if (excel) {
+      const contactUs = await ContactUsForm.findAll({
+        where: { [Op.and]: query },
+        order: [["createdAt", "DESC"]],
+      });
+      res.status(200).json({
+        success: true,
+        message: "Contact us form fetched successfully!",
+        data: contactUs,
+      });
+    } else {
+      // Pagination
+      const recordLimit = parseInt(limit) || 10;
+      let offSet = 0;
+      let currentPage = 1;
+      if (page) {
+        offSet = (parseInt(page) - 1) * recordLimit;
+        currentPage = parseInt(page);
+      }
+
+      const [contactUs, totalContactUs] = await Promise.all([
+        ContactUsForm.findAll({
+          limit: recordLimit,
+          offset: offSet,
+          where: { [Op.and]: query },
+          order: [["createdAt", "DESC"]],
+        }),
+        ContactUsForm.count({ where: { [Op.and]: query } }),
+      ]);
+
+      res.status(200).json({
+        success: true,
+        message: "Contact us form fetched successfully!",
+        totalPage: Math.ceil(totalContactUs / recordLimit),
+        currentPage: currentPage,
+        data: contactUs,
+      });
+    }
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+exports.getContactUsLeadDetails = async (req, res) => {
+  try {
+    const leads = await ContactUsForm.findOne({ where: { id: req.params.id } });
+    if (!leads) {
+      return res.status(400).json({
+        success: false,
+        message: "Contact us details is not present!",
+      });
+    }
+    res.status(200).json({
+      success: true,
+      message: "Contact us form fetched successfully!",
+      data: leads,
+    });
   } catch (err) {
     res.status(500).json({
       success: false,

@@ -25,6 +25,7 @@ db.sequelize = sequelize;
 
 db.admin = require("./Admin/adminModel.js")(sequelize, Sequelize);
 db.reachOut = require("./Admin/reachOutModel.js")(sequelize, Sequelize);
+db.employee = require("./Admin/employeeModel.js")(sequelize, Sequelize);
 db.user = require("./User/userModel.js")(sequelize, Sequelize);
 db.mutualDivorceForm = require("./User/mutualDivorceFormModel.js")(
   sequelize,
@@ -41,10 +42,19 @@ db.user.hasMany(db.mutualDivorceForm, {
 });
 db.mutualDivorceForm.belongsTo(db.user, { foreignKey: "userId", as: "user" });
 
+db.employee.hasMany(db.contactUsForm, {
+  foreignKey: "employeeId",
+  as: "contactUsForms",
+});
+db.contactUsForm.belongsTo(db.employee, {
+  foreignKey: "employeeId",
+  as: "employee",
+});
+
 // queryInterface
-//   .addColumn("contactUsForms", "slug", {
-//     type: DataTypes.STRING,
-//     unique: true,
+//   .addColumn("contactUsForms", "employeeId", {
+//     type: DataTypes.UUID,
+//     references: { model: "employees", key: "id" },
 //   })
 //   .then((res) => {
 //     console.log("added!");
@@ -52,5 +62,4 @@ db.mutualDivorceForm.belongsTo(db.user, { foreignKey: "userId", as: "user" });
 //   .catch((err) => {
 //     console.log(err);
 //   });
-
 module.exports = db;

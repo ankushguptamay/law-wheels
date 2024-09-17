@@ -8,6 +8,7 @@ const {
   updateAdminName,
   getAdmin,
 } = require("../Controllers/Admin/adminController");
+const { registerEmployee } = require("../Controllers/Employee/employeeCont");
 const {
   getAllMutualDivorceForm,
   getMutualDivorceFormUserId,
@@ -44,6 +45,9 @@ router.get("/getAdmin", verifyAdminToken, isAdminPresent, getAdmin);
 
 // User
 router.get("/users", verifyAdminToken, isAdminPresent, getAllUser);
+
+// Employee
+router.post("/registerEmployee", verifyAdminToken, isAdminPresent, registerEmployee);
 
 // router.get("/allMutualDivorceDetails", verifyAdminToken, isAdminPresent, getAllMutualDivorceForm);
 router.get(
