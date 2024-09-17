@@ -33,6 +33,15 @@ module.exports = (sequelize, DataTypes) => {
     message: {
       type: DataTypes.TEXT,
     },
+    employeeId: {
+      type: DataTypes.UUID,
+      references: {
+        model: "employees",
+        key: "id",
+      },
+      onUpdate: "CASCADE",
+      onDelete: "SET NULL", // optional: sets foreign key to null if the referenced row is deleted
+    },
   });
 
   const today = new Date();
