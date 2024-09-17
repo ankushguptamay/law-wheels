@@ -79,7 +79,7 @@ exports.getAllContactUsForm = async (req, res) => {
       endDate,
       date,
     } = req.query;
-
+    console.log(typeof excel);
     // Search
     const query = [];
 
@@ -94,9 +94,9 @@ exports.getAllContactUsForm = async (req, res) => {
         ],
       });
     }
-    if (isMutual) {
+    if (isMutual === "true") {
       query.push({ data_from_page: "Mutual Divorce" });
-    } else if (others) {
+    } else if (others === "true") {
       query.push({ data_from_page: "Others" });
     }
 
@@ -115,7 +115,7 @@ exports.getAllContactUsForm = async (req, res) => {
       query.push({ createdAt: { [Op.between]: [start, end] } });
     }
 
-    if (excel) {
+    if (excel === "true") {
       const contactUs = await ContactUsForm.findAll({
         where: { [Op.and]: query },
         order: [["createdAt", "DESC"]],
@@ -261,9 +261,9 @@ exports.getAllContactUsLeadBDA = async (req, res) => {
         ],
       });
     }
-    if (isMutual) {
+    if (isMutual === "true") {
       query.push({ data_from_page: "Mutual Divorce" });
-    } else if (others) {
+    } else if (others === "true") {
       query.push({ data_from_page: "Others" });
     }
 
@@ -282,7 +282,7 @@ exports.getAllContactUsLeadBDA = async (req, res) => {
       query.push({ createdAt: { [Op.between]: [start, end] } });
     }
 
-    if (excel) {
+    if (excel === "true") {
       const contactUs = await ContactUsForm.findAll({
         where: { [Op.and]: query },
         order: [["createdAt", "DESC"]],
