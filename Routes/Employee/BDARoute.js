@@ -6,15 +6,15 @@ const {
   changePassword,
   updateEmployeeName,
   getEmployee,
-} = require("../Controllers/Employee/employeeCont");
+} = require("../../Controllers/Employee/employeeCont");
 const {
   getAllContactUsLeadBDA,
   getContactUsLeadDetails,
-} = require("../Controllers/Admin/cantactUsFormModel");
+} = require("../../Controllers/Admin/cantactUsFormModel");
 
 //middleware
-const { verifyEmployeeToken } = require("../Middlewares/verifyJWT");
-const { isBDAEmployeePresent ,isEmployeePresent} = require("../Middlewares/isPresent");
+const { verifyEmployeeToken } = require("../../Middlewares/verifyJWT");
+const { isBDAEmployeePresent } = require("../../Middlewares/isPresent");
 
 router.post("/login", loginEmployee);
 router.post("/changePassword", changePassword);
@@ -22,15 +22,14 @@ router.put("/updateName", verifyEmployeeToken, updateEmployeeName);
 router.get("/", verifyEmployeeToken, getEmployee);
 
 router.get(
-    "/contactLead/:id",
-    verifyEmployeeToken,
-    isEmployeePresent,
-    getContactUsLeadDetails
-  );
+  "/contactLeads/:id",
+  verifyEmployeeToken,
+  isBDAEmployeePresent,
+  getContactUsLeadDetails
+);
 
-// BDA
 router.get(
-  "/myContactLeads",
+  "/contactLeads",
   verifyEmployeeToken,
   isBDAEmployeePresent,
   getAllContactUsLeadBDA

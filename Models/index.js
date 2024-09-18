@@ -35,6 +35,12 @@ db.contactUsForm = require("./contactUsFormModel.js")(sequelize, Sequelize);
 db.emailOTP = require("./User/emailOTPModel.js")(sequelize, Sequelize);
 
 db.banner = require("./Master/bannerModel.js")(sequelize, Sequelize);
+db.category = require("./Master/blogCategoryModel.js")(sequelize, Sequelize);
+db.parentCategory = require("./Master/blogParentCategoryModel.js")(
+  sequelize,
+  Sequelize
+);
+db.tags = require("./Master/blogTagsModel.js")(sequelize, Sequelize);
 
 db.user.hasMany(db.mutualDivorceForm, {
   foreignKey: "userId",
@@ -49,6 +55,15 @@ db.employee.hasMany(db.contactUsForm, {
 db.contactUsForm.belongsTo(db.employee, {
   foreignKey: "employeeId",
   as: "employee",
+});
+
+db.parentCategory.hasMany(db.category, {
+  foreignKey: "pCategoryId",
+  as: "categories",
+});
+db.category.belongsTo(db.parentCategory, {
+  foreignKey: "pCategoryId",
+  as: "pCategory",
 });
 
 // queryInterface

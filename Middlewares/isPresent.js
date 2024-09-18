@@ -77,29 +77,28 @@ exports.isBDAEmployeePresent = async (req, res, next) => {
   }
 };
 
-exports.isEmployeePresent = async (req, res, next) => {
-    try {
-      const admin = await Employee.findOne({
-        where: {
-          [Op.and]: [
-            { id: req.employee.id },
-            { email: req.employee.email },
-            { role: req.employee.role },
-          ],
-        },
-      });
-      if (!admin) {
-        return res.status(400).json({
-          success: false,
-          message: "Admin is not present!",
-        });
-      }
-      next();
-    } catch (err) {
-      res.status(500).json({
+exports.isBloggerEmployeePresent = async (req, res, next) => {
+  try {
+    const admin = await Employee.findOne({
+      where: {
+        [Op.and]: [
+          { id: req.employee.id },
+          { email: req.employee.email },
+          { role: "Blogger" },
+        ],
+      },
+    });
+    if (!admin) {
+      return res.status(400).json({
         success: false,
-        message: err.message,
+        message: "Admin is not present!",
       });
     }
-  };
-  
+    next();
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
