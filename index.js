@@ -6,6 +6,7 @@ const admin = require("./Routes/adminRoute");
 const user = require("./Routes/userRoute");
 const BDA = require("./Routes/Employee/BDARoute");
 const blogger = require("./Routes/Employee/bloggerRoute");
+const employee = require("./Routes/Employee/employeeRoute")
 // const os = require('os');
 // const cpus = os.cpus().length;
 // console.log(cpus);
@@ -35,6 +36,7 @@ app.use("/files", express.static("./Resource"));
 
 app.use("/api/admin", admin);
 app.use("/api/user", user);
+app.use("/api/employee", employee);
 app.use("/api/BDA", BDA);
 app.use("/api/blogger", blogger);
 

@@ -162,7 +162,7 @@ exports.getParentCategories = async (req, res) => {
       message: "Parent categories fetched successfully!",
       data: parentCategories,
       totalPages: totalPages,
-      currentPage: page,
+      currentPage
     });
   } catch (err) {
     res.status(500).json({
@@ -218,7 +218,7 @@ exports.getCategories = async (req, res) => {
       message: "Categories fetched successfully!",
       data: categories,
       totalPages: totalPages,
-      currentPage: page,
+      currentPage
     });
   } catch (err) {
     res.status(500).json({

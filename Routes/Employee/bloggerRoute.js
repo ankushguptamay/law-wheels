@@ -2,12 +2,6 @@ const express = require("express");
 const router = express.Router();
 
 const {
-  loginEmployee,
-  changePassword,
-  updateEmployeeName,
-  getEmployee,
-} = require("../../Controllers/Employee/employeeCont");
-const {
   getAllContactUsForm,
   getContactUsLeadDetails,
 } = require("../../Controllers/Admin/cantactUsFormModel");
@@ -23,15 +17,17 @@ const {
   categorySlug,
   parentCategorySlug,
 } = require("../../Controllers/Master/blogCategoryCont");
+const {
+  addTag,
+  getTag,
+  updateTag,
+  deleteTag,
+  tagSlug,
+} = require("../../Controllers/Master/tagController");
 
 //middleware
 const { verifyEmployeeToken } = require("../../Middlewares/verifyJWT");
 const { isBloggerEmployeePresent } = require("../../Middlewares/isPresent");
-
-router.post("/login", loginEmployee);
-router.post("/changePassword", changePassword);
-router.put("/updateName", verifyEmployeeToken, updateEmployeeName);
-router.get("/", verifyEmployeeToken, getEmployee);
 
 router.use(verifyEmployeeToken);
 router.use(isBloggerEmployeePresent);
@@ -64,5 +60,12 @@ router.put(
 router.delete("/parentCategories/:id", deleteParentCategories);
 router.put("/categorySlug", categorySlug);
 router.put("/parentCategorySlug", parentCategorySlug);
+
+// tag
+router.post("/tag", addTag);
+router.get("/tag", getTag);
+router.put("/tag/:id", updateTag);
+router.delete("/tag/:id", deleteTag);
+router.put("/tagSlug", tagSlug);
 
 module.exports = router;
