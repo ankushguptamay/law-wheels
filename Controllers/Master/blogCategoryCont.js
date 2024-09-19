@@ -242,10 +242,10 @@ exports.updateParentCategories = async (req, res) => {
       });
     }
     const { slug, description, sort_order, name } = req.body;
-    const id = req.params.id;
+    const slugy = req.params.slug;
 
     const parentCategorie = await ParentBlogCategories.findOne({
-      where: { id },
+      where: { slug: slugy },
     });
     if (!parentCategorie) {
       if (req.file) {
@@ -327,9 +327,9 @@ exports.updateCategories = async (req, res) => {
       });
     }
     const { slug, description, sort_order, pCategoryId, name } = req.body;
-    const id = req.params.id;
+    const slugy = req.params.slug;
 
-    const categorie = await BlogCategories.findOne({ where: { id } });
+    const categorie = await BlogCategories.findOne({ where: { slug: slugy } });
     if (!categorie) {
       if (req.file) {
         deleteSingleFile(req.file.path);
@@ -406,10 +406,10 @@ exports.updateCategories = async (req, res) => {
 
 exports.deleteParentCategories = async (req, res) => {
   try {
-    const id = req.params.id;
+    const slug = req.params.slug;
 
     const parentCategorie = await ParentBlogCategories.findOne({
-      where: { id },
+      where: { slug },
     });
     if (!parentCategorie) {
       return res.status(400).json({
@@ -451,9 +451,9 @@ exports.deleteParentCategories = async (req, res) => {
 
 exports.deleteCategories = async (req, res) => {
   try {
-    const id = req.params.id;
+    const slug = req.params.slug;
 
-    const categorie = await BlogCategories.findOne({ where: { id } });
+    const categorie = await BlogCategories.findOne({ where: { slug } });
     if (!categorie) {
       return res.status(400).json({
         success: false,

@@ -139,21 +139,4 @@ db.blogTagAssociation.belongsTo(db.blogTags, {
 //     console.log(err);
 //   });
 
-queryInterface
-  .removeColumn("blogs", "categorys")
-  .then((res) => {
-    console.log("removed!");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
-
-queryInterface
-  .removeColumn("blogs", "tags")
-  .then((res) => {
-    console.log("removed!");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
 module.exports = db;

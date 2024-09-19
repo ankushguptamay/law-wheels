@@ -101,9 +101,9 @@ exports.updateTag = async (req, res) => {
       });
     }
     const { slug, description, name } = req.body;
-    const id = req.params.id;
+    const slugy = req.params.slug;
 
-    const tag = await BlogTag.findOne({ where: { id } });
+    const tag = await BlogTag.findOne({ where: { slug: slugy } });
     if (!tag) {
       return res.status(400).json({
         success: false,
@@ -147,9 +147,9 @@ exports.updateTag = async (req, res) => {
 
 exports.deleteTag = async (req, res) => {
   try {
-    const id = req.params.id;
+    const slug = req.params.slug;
 
-    const tag = await BlogTag.findOne({ where: { id } });
+    const tag = await BlogTag.findOne({ where: { slug } });
     if (!tag) {
       return res.status(400).json({
         success: false,

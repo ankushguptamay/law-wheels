@@ -57,11 +57,11 @@ router.post("/categories", uploadImage.single("CategoryPic"), addCategories);
 router.get("/categories", getCategories);
 router.get("/categories/:slug", categoryDetails);
 router.put(
-  "/categories/:id",
+  "/categories/:slug",
   uploadImage.single("CategoryPic"),
   updateCategories
 );
-router.delete("/categories/:id", deleteCategories);
+router.delete("/categories/:slug", deleteCategories);
 
 router.post(
   "/parentCategories",
@@ -71,11 +71,11 @@ router.post(
 router.get("/parentCategories", getParentCategories);
 router.get("/parentCategories/:slug", parentCategoryDetails);
 router.put(
-  "/parentCategories/:id",
+  "/parentCategories/:slug",
   uploadImage.single("CategoryPic"),
   updateParentCategories
 );
-router.delete("/parentCategories/:id", deleteParentCategories);
+router.delete("/parentCategories/:slug", deleteParentCategories);
 router.put("/categorySlug", categorySlug);
 router.put("/parentCategorySlug", parentCategorySlug);
 
@@ -83,8 +83,8 @@ router.put("/parentCategorySlug", parentCategorySlug);
 router.post("/tag", addTag);
 router.get("/tag", getTag);
 router.get("/tag/:slug", tagDetails);
-router.put("/tag/:id", updateTag);
-router.delete("/tag/:id", deleteTag);
+router.put("/tag/:slug", updateTag);
+router.delete("/tag/:slug", deleteTag);
 router.put("/tagSlug", tagSlug);
 
 // Blog
