@@ -74,3 +74,19 @@ exports.publishBlogValidation = (data) => {
   });
   return schema.validate(data);
 };
+
+exports.addCategoryToBlogValidation = (data) => {
+  const schema = joi.object().keys({
+    blogId: joi.string().required(),
+    categorys: joi.array().items(schemaCategorys).min(1).optional(),
+  });
+  return schema.validate(data);
+};
+
+exports.addTagToBlogValidation = (data) => {
+  const schema = joi.object().keys({
+    blogId: joi.string().required(),
+    tags: joi.array().items(schemaTags).min(1).optional(),
+  });
+  return schema.validate(data);
+};

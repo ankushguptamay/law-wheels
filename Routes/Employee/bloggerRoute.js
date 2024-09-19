@@ -38,6 +38,10 @@ const {
   getBlogs,
   publishBlog,
   blogSlug,
+  deleteCategoryFromBlog,
+  deleteTagFromBlog,
+  addCategoryToBlog,
+  addTagToBlog,
 } = require("../../Controllers/Employee/blogController");
 
 //middleware
@@ -113,5 +117,10 @@ router.put("/blog/:id", updateBlog);
 router.delete("/blog/:id", deleteBlog);
 router.put("/blogSlug", blogSlug);
 router.put("/publish/:id", publishBlog);
+
+router.put("/deleteCategoryFromBlog/:slug", deleteCategoryFromBlog);
+router.put("/deleteTagFromBlog/:slug", deleteTagFromBlog);
+router.put("/addCategoryToBlog", addCategoryToBlog);
+router.put("/addTagToBlog", addTagToBlog);
 
 module.exports = router;

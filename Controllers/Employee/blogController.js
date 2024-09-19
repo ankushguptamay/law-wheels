@@ -3,6 +3,8 @@ const {
   blogValidation,
   slugValidation,
   publishBlogValidation,
+  addTagToBlogValidation,
+  addCategoryToBlogValidation,
 } = require("../../Middlewares/blogValidation");
 const db = require("../../Models");
 const Blog = db.blog;
@@ -454,7 +456,7 @@ exports.publishBlog = async (req, res) => {
 
 exports.getBlogs = async (req, res) => {
   try {
-    const { limit, page, search } = req.query;
+    const { limit, page, search, categorySlug, tagSlug } = req.query;
     // Pagination
     const recordLimit = parseInt(limit) || 10;
     let offSet = 0;
@@ -465,25 +467,59 @@ exports.getBlogs = async (req, res) => {
     }
 
     //Search
-    let query = {},
-      categoryQuery = {},
-      tagQuery = {};
+    const query = [];
     if (search) {
-      query = {
+      query.push({
         [Op.or]: [
           { slug: { [Op.startsWith]: search } },
           { title: { [Op.startsWith]: search } },
         ],
-      };
-      // categoryQuery = { categorySlug: { [Op.startsWith]: search } };
-      // tagQuery = { tagSlug: { [Op.startsWith]: search } };
+      });
+    }
+    // Filter
+    if (tagSlug && categorySlug) {
+      // Get All blog related to category
+      const tags = await BlogTagAssociation.findAll({
+        where: { tagSlug },
+      });
+      const categorie = await BlogCategoryAssociaction.findAll({
+        where: { categorySlug },
+      });
+      const blogIds = [];
+      for (let i = 0; i < tags.length; i++) {
+        blogIds.push(tags[i].blogId);
+      }
+      for (let i = 0; i < categorie.length; i++) {
+        blogIds.push(categorie[i].blogId);
+      }
+      const uniqueArray = [...new Set(blogIds)];
+      console.log(uniqueArray);
+      query.push({ id: uniqueArray });
+    } else if (tagSlug) {
+      const tags = await BlogTagAssociation.findAll({
+        where: { tagSlug },
+      });
+      const blogIds = [];
+      for (let i = 0; i < tags.length; i++) {
+        blogIds.push(tags[i].blogId);
+      }
+      query.push({ id: blogIds });
+    } else if (categorySlug) {
+      const categorie = await BlogCategoryAssociaction.findAll({
+        where: { categorySlug },
+      });
+      const blogIds = [];
+      for (let i = 0; i < categorie.length; i++) {
+        blogIds.push(categorie[i].blogId);
+      }
+      query.push({ id: blogIds });
     }
 
     const [blog, totalBlogs] = await Promise.all([
       Blog.findAll({
         limit: recordLimit,
         offset: offSet,
-        where: query,
+        where: { [Op.and]: query },
         include: [
           {
             model: BlogImage,
@@ -493,21 +529,17 @@ exports.getBlogs = async (req, res) => {
           {
             model: BlogCategoryAssociaction,
             as: "blogCategory_juction",
-            // where: categoryQuery,
-            // required: false,
             attributes: ["id", "categorySlug", "blogCategoryId"],
           },
           {
             model: BlogTagAssociation,
             as: "blogTag_juction",
-            // where: tagQuery,
-            // required: false,
             attributes: ["id", "tagSlug", "blogTagId"],
           },
         ],
         order: [["createdAt", "DESC"]],
       }),
-      Blog.count({ where: query }),
+      Blog.count({ where: { [Op.and]: query } }),
     ]);
 
     const totalPages = Math.ceil(totalBlogs / recordLimit) || 0;
@@ -675,8 +707,6 @@ exports.getBlogsForUser = async (req, res) => {
       { publishDate: { [Op.lt]: today } },
       { status: "Published" },
     ];
-    let categoryQuery = {},
-      tagQuery = {};
     if (search) {
       query.push({
         [Op.or]: [
@@ -684,8 +714,6 @@ exports.getBlogsForUser = async (req, res) => {
           { title: { [Op.startsWith]: search } },
         ],
       });
-      // categoryQuery = { categorySlug: { [Op.startsWith]: search } };
-      // tagQuery = { tagSlug: { [Op.startsWith]: search } };
     }
     const [blog, totalBlogs] = await Promise.all([
       Blog.findAll({
@@ -701,15 +729,11 @@ exports.getBlogsForUser = async (req, res) => {
           {
             model: BlogCategoryAssociaction,
             as: "blogCategory_juction",
-            // where: categoryQuery,
-            // required: false,
             attributes: ["id", "categorySlug", "blogCategoryId"],
           },
           {
             model: BlogTagAssociation,
             as: "blogTag_juction",
-            // where: tagQuery,
-            // required: false,
             attributes: ["id", "tagSlug", "blogTagId"],
           },
         ],
@@ -727,6 +751,150 @@ exports.getBlogsForUser = async (req, res) => {
       totalPages: totalPages,
       currentPage,
     });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+exports.deleteCategoryFromBlog = async (req, res) => {
+  try {
+    const blogId = req.body.blogId;
+    if (!blogId) {
+      return res.status(400).json({
+        success: false,
+        message: `Select a blog!`,
+      });
+    }
+    const slug = req.params.slug;
+    const isPresent = await BlogCategoryAssociaction.findOne({
+      where: { blogId, categorySlug: slug },
+    });
+    if (!isPresent) {
+      return res.status(400).json({
+        success: false,
+        message: `No present`,
+      });
+    }
+
+    await isPresent.destroy();
+    res
+      .status(200)
+      .json({ success: true, message: `Category removed successfully!` });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+exports.deleteTagFromBlog = async (req, res) => {
+  try {
+    const blogId = req.body.blogId;
+    if (!blogId) {
+      return res.status(400).json({
+        success: false,
+        message: `Select a blog!`,
+      });
+    }
+    const slug = req.params.slug;
+    const isPresent = await BlogTagAssociation.findOne({
+      where: { blogId, tagSlug: slug },
+    });
+    if (!isPresent) {
+      return res.status(400).json({
+        success: false,
+        message: `No present`,
+      });
+    }
+
+    await isPresent.destroy();
+    res
+      .status(200)
+      .json({ success: true, message: `Tag removed successfully!` });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+exports.addCategoryToBlog = async (req, res) => {
+  try {
+    // Body Validation
+    const { error } = addCategoryToBlogValidation(req.body);
+    if (error) {
+      return res.status(400).json({
+        success: false,
+        message: error.details[0].message,
+      });
+    }
+    const { blogId, categorys } = req.body;
+    const isPresent = await Blog.findOne({ where: { id: blogId } });
+    if (!isPresent) {
+      return res.status(400).json({
+        success: false,
+        message: `Blog is not present`,
+      });
+    }
+    //Add category association
+    for (let i = 0; i < categorys.length; i++) {
+      const [record, isCreated] = await BlogCategoryAssociaction.findOrCreate({
+        where: { blogId: blogId, blogCategoryId: categorys[i].id }, // Condition to check if the record exists
+        defaults: {
+          blogId: blogId,
+          blogCategoryId: categorys[i].id,
+          categorySlug: categorys[i].slug,
+        },
+      });
+    }
+    res
+      .status(200)
+      .json({ success: true, message: `Categories added successfully!` });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+exports.addTagToBlog = async (req, res) => {
+  try {
+    // Body Validation
+    const { error } = addTagToBlogValidation(req.body);
+    if (error) {
+      return res.status(400).json({
+        success: false,
+        message: error.details[0].message,
+      });
+    }
+    const { blogId, tags } = req.body;
+    const isPresent = await Blog.findOne({ where: { id: blogId } });
+    if (!isPresent) {
+      return res.status(400).json({
+        success: false,
+        message: `Blog is not present`,
+      });
+    }
+    //Add tag association
+    for (let i = 0; i < tags.length; i++) {
+      const [record, isCreated] = await BlogTagAssociation.findOrCreate({
+        where: { blogId: blogId, blogTagId: tags[i].id }, // Condition to check if the record exists
+        defaults: {
+          blogId: blogId,
+          blogTagId: tags[i].id,
+          tagSlug: tags[i].slug,
+        },
+      });
+    }
+    res
+      .status(200)
+      .json({ success: true, message: `Tags added successfully!` });
   } catch (err) {
     res.status(500).json({
       success: false,
