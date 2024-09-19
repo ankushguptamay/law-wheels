@@ -20,6 +20,10 @@ const {
   getAllMutualDivorceFormForUser,
 } = require("../Controllers/User/DivorceForm/getMDFormController");
 const {
+  getBlogBySlugForUser,
+  getBlogsForUser,
+} = require("../Controllers/Employee/blogController");
+const {
   createContactUsForm,
 } = require("../Controllers/Admin/cantactUsFormModel");
 const { createReachOut } = require("../Controllers/Admin/reachOutController");
@@ -81,5 +85,9 @@ router.post("/reachOut", createReachOut);
 
 // Heart
 router.get("/heartAPI", heartAPI);
+
+// Blog
+router.get("/blog", getBlogsForUser);
+router.get("/blog/:id", getBlogBySlugForUser);
 
 module.exports = router;

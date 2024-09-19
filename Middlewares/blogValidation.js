@@ -1,5 +1,14 @@
 const joi = require("joi");
 
+const schemaTags = joi.object({
+  id: joi.string().required(),
+  slug: joi.string().required(),
+});
+const schemaCategorys = joi.object({
+  id: joi.string().required(),
+  slug: joi.string().required(),
+});
+
 exports.parentCategoriesValidation = (data) => {
   const schema = joi.object().keys({
     name: joi.string().min(3).required(),
@@ -33,11 +42,10 @@ exports.tagValidation = (data) => {
 exports.blogValidation = (data) => {
   const schema = joi.object().keys({
     slug: joi.string().min(3).required(),
-    category: joi.array().optional(),
-    tag: joi.array().optional(),
+    categorys: joi.array().items(schemaCategorys).optional(),
+    tags: joi.array().items(schemaTags).optional(),
     title: joi.string().min(3).required(),
     content: joi.string().required(),
-    excerpt: joi.string().optional(),
     readTime: joi.string().required(),
     publishDate: joi.string().required(),
     status: joi.string().valid("Draft", "Published").required(),

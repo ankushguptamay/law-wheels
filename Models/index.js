@@ -35,12 +35,26 @@ db.contactUsForm = require("./contactUsFormModel.js")(sequelize, Sequelize);
 db.emailOTP = require("./User/emailOTPModel.js")(sequelize, Sequelize);
 
 db.banner = require("./Master/bannerModel.js")(sequelize, Sequelize);
-db.category = require("./Master/blogCategoryModel.js")(sequelize, Sequelize);
-db.parentCategory = require("./Master/blogParentCategoryModel.js")(
+db.blogCategory = require("./Master/blogCategoryModel.js")(
   sequelize,
   Sequelize
 );
-db.tags = require("./Master/blogTagsModel.js")(sequelize, Sequelize);
+db.blogParentCategory = require("./Master/blogParentCategoryModel.js")(
+  sequelize,
+  Sequelize
+);
+db.blogTags = require("./Master/blogTagsModel.js")(sequelize, Sequelize);
+
+db.blogImages = require("./Blog/blogImgesModel.js")(sequelize, Sequelize);
+db.blog = require("./Blog/blogModel.js")(sequelize, Sequelize);
+db.blogCategoryAssociation = require("./Blog/blogCategoryAssociation.js")(
+  sequelize,
+  Sequelize
+);
+db.blogTagAssociation = require("./Blog/blogTagAssociation.js")(
+  sequelize,
+  Sequelize
+);
 
 db.user.hasMany(db.mutualDivorceForm, {
   foreignKey: "userId",
@@ -57,15 +71,62 @@ db.contactUsForm.belongsTo(db.employee, {
   as: "employee",
 });
 
-db.parentCategory.hasMany(db.category, {
+db.blogParentCategory.hasMany(db.blogCategory, {
   foreignKey: "pCategoryId",
   as: "categories",
 });
-db.category.belongsTo(db.parentCategory, {
+db.blogCategory.belongsTo(db.blogParentCategory, {
   foreignKey: "pCategoryId",
   as: "pCategory",
 });
 
+// Blog Association
+db.blog.hasMany(db.blogImages, {
+  foreignKey: "blogId",
+  as: "images",
+});
+db.blogImages.belongsTo(db.blog, {
+  foreignKey: "blogId",
+  as: "blog",
+});
+
+db.blog.hasMany(db.blogCategoryAssociation, {
+  foreignKey: "blogId",
+  as: "blogCategory_juction",
+});
+db.blogCategoryAssociation.belongsTo(db.blog, {
+  foreignKey: "blogId",
+  as: "blogs",
+});
+
+db.blogCategory.hasMany(db.blogCategoryAssociation, {
+  foreignKey: "blogCategoryId",
+  as: "blogCategory_juction",
+});
+db.blogCategoryAssociation.belongsTo(db.blogCategory, {
+  foreignKey: "blogCategoryId",
+  as: "categories",
+});
+
+db.blog.hasMany(db.blogTagAssociation, {
+  foreignKey: "blogId",
+  as: "blogTag_juction",
+});
+db.blogTagAssociation.belongsTo(db.blog, {
+  foreignKey: "blogId",
+  as: "blogs",
+});
+
+db.blogTags.hasMany(db.blogTagAssociation, {
+  foreignKey: "blogTagId",
+  as: "blogTag_juction",
+});
+db.blogTagAssociation.belongsTo(db.blogTags, {
+  foreignKey: "blogTagId",
+  as: "tags",
+});
+
+// To add a foriegn key in existing table
 // queryInterface
 //   .addColumn("contactUsForms", "employeeId", {
 //     type: DataTypes.UUID,
@@ -77,4 +138,22 @@ db.category.belongsTo(db.parentCategory, {
 //   .catch((err) => {
 //     console.log(err);
 //   });
+
+queryInterface
+  .removeColumn("blogs", "categorys")
+  .then((res) => {
+    console.log("removed!");
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+
+queryInterface
+  .removeColumn("blogs", "tags")
+  .then((res) => {
+    console.log("removed!");
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 module.exports = db;

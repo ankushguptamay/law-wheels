@@ -1,6 +1,6 @@
 const db = require("../../Models");
-const ParentBlogCategories = db.parentCategory;
-const BlogCategories = db.category;
+const ParentBlogCategories = db.blogParentCategory;
+const BlogCategories = db.blogCategory;
 const { Op } = require("sequelize");
 const { deleteSingleFile } = require("../../Util/deleteFile");
 const {
@@ -162,7 +162,7 @@ exports.getParentCategories = async (req, res) => {
       message: "Parent categories fetched successfully!",
       data: parentCategories,
       totalPages: totalPages,
-      currentPage
+      currentPage,
     });
   } catch (err) {
     res.status(500).json({
@@ -218,7 +218,7 @@ exports.getCategories = async (req, res) => {
       message: "Categories fetched successfully!",
       data: categories,
       totalPages: totalPages,
-      currentPage
+      currentPage,
     });
   } catch (err) {
     res.status(500).json({
@@ -533,6 +533,52 @@ exports.categorySlug = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "NotPresent!",
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+exports.parentCategoryDetails = async (req, res) => {
+  try {
+    const slug = req.params.slug;
+    const isBlog = await ParentBlogCategories.findOne({ where: { slug } });
+    if (!isBlog) {
+      return res.status(400).json({
+        success: false,
+        message: "NotPresent!",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: isBlog,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+exports.categoryDetails = async (req, res) => {
+  try {
+    const slug = req.params.slug;
+    const isBlog = await BlogCategories.findOne({ where: { slug } });
+    if (!isBlog) {
+      return res.status(400).json({
+        success: false,
+        message: "NotPresent!",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: isBlog,
     });
   } catch (err) {
     res.status(500).json({

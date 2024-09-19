@@ -1,9 +1,10 @@
+const { Op } = require("sequelize");
 const {
   tagValidation,
   slugValidation,
 } = require("../../Middlewares/blogValidation");
 const db = require("../../Models");
-const BlogTag = db.tags;
+const BlogTag = db.blogTags;
 
 exports.addTag = async (req, res) => {
   try {
@@ -192,6 +193,29 @@ exports.tagSlug = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "NotPresent!",
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+exports.tagDetails = async (req, res) => {
+  try {
+    const slug = req.params.slug;
+    const isBlog = await BlogTag.findOne({ where: { slug } });
+    if (!isBlog) {
+      return res.status(400).json({
+        success: false,
+        message: "NotPresent!",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: isBlog,
     });
   } catch (err) {
     res.status(500).json({
