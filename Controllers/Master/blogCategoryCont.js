@@ -568,7 +568,16 @@ exports.parentCategoryDetails = async (req, res) => {
 exports.categoryDetails = async (req, res) => {
   try {
     const slug = req.params.slug;
-    const isBlog = await BlogCategories.findOne({ where: { slug } });
+    const isBlog = await BlogCategories.findOne({
+      where: { slug },
+      include: [
+        {
+          model: ParentBlogCategories,
+          as: "pCategory",
+          attributes: ["name", "slug", "url", "description"],
+        },
+      ],
+    });
     if (!isBlog) {
       return res.status(400).json({
         success: false,
