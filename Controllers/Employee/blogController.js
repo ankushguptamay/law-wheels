@@ -493,7 +493,6 @@ exports.getBlogs = async (req, res) => {
         blogIds.push(categorie[i].blogId);
       }
       const uniqueArray = [...new Set(blogIds)];
-      console.log(uniqueArray);
       query.push({ id: uniqueArray });
     } else if (tagSlug) {
       const tags = await BlogTagAssociation.findAll({

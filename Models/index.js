@@ -31,7 +31,10 @@ db.mutualDivorceForm = require("./User/mutualDivorceFormModel.js")(
   sequelize,
   Sequelize
 );
-db.contactUsForm = require("./contactUsFormModel.js")(sequelize, Sequelize);
+db.contactUsForm = require("./ContactUs/contactUsFormModel.js")(
+  sequelize,
+  Sequelize
+);
 db.emailOTP = require("./User/emailOTPModel.js")(sequelize, Sequelize);
 
 db.banner = require("./Master/bannerModel.js")(sequelize, Sequelize);
@@ -51,6 +54,11 @@ db.blogCategoryAssociation = require("./Blog/blogCategoryAssociation.js")(
   sequelize,
   Sequelize
 );
+db.contactUsLeadLogs = require("./ContactUs/contactUsLeadLogsModel.js")(
+  sequelize,
+  Sequelize
+);
+db.notification = require("./notificationModel.js")(sequelize, Sequelize);
 db.blogTagAssociation = require("./Blog/blogTagAssociation.js")(
   sequelize,
   Sequelize
@@ -126,11 +134,32 @@ db.blogTagAssociation.belongsTo(db.blogTags, {
   as: "tags",
 });
 
+db.employee.hasMany(db.contactUsLeadLogs, {
+  foreignKey: "employeeId",
+  as: "leadLogs",
+});
+
+db.contactUsForm.hasMany(db.contactUsLeadLogs, {
+  foreignKey: "cSLeadId",
+  as: "leadLogs",
+});
+
 // To add a foriegn key in existing table
 // queryInterface
 //   .addColumn("contactUsForms", "employeeId", {
 //     type: DataTypes.UUID,
 //     references: { model: "employees", key: "id" },
+//   })
+//   .then((res) => {
+//     console.log("added!");
+//   })
+//   .catch((err) => {
+//     console.log(err);
+//   });
+
+// queryInterface
+//   .addColumn("employees", "device_token", {
+//     type: DataTypes.STRING(1234)
 //   })
 //   .then((res) => {
 //     console.log("added!");

@@ -68,6 +68,7 @@ exports.isBDAEmployeePresent = async (req, res, next) => {
         message: "Admin is not present!",
       });
     }
+    req.employee = admin;
     next();
   } catch (err) {
     res.status(500).json({

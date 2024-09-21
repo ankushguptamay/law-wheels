@@ -23,9 +23,9 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     slug: {
-        type: DataTypes.STRING,
-        unique: true,
-      },
+      type: DataTypes.STRING,
+      unique: true,
+    },
     mobileNumber: {
       type: DataTypes.STRING,
       unique: true,
@@ -33,6 +33,7 @@ module.exports = (sequelize, DataTypes) => {
     password: {
       type: DataTypes.STRING,
     },
+    device_token: { type: DataTypes.STRING(1234) },
   });
 
   const today = new Date();

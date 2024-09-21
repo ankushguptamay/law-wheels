@@ -3,13 +3,13 @@ const { contactUsForm } = require("../../Middlewares/validate");
 const { Op } = require("sequelize");
 const ContactUsForm = db.contactUsForm;
 const Employee = db.employee;
+const CSLeadLog = db.contactUsLeadLogs;
 
 exports.createContactUsForm = async (req, res) => {
   try {
     // Validate body
     const { error } = contactUsForm(req.body);
     if (error) {
-      // console.log(error);
       return res.status(400).json(error.details[0].message);
     }
     const form = await ContactUsForm.create(req.body);
@@ -29,7 +29,6 @@ exports.createContactUsForm = async (req, res) => {
 
     const totalBDA = employee.length;
     if (totalBDA === 0) {
-      console.log("here");
       return res.status(200).send({
         success: true,
         message: `Contact us form created successfully!`,
@@ -79,7 +78,6 @@ exports.getAllContactUsForm = async (req, res) => {
       endDate,
       date,
     } = req.query;
-    console.log(typeof excel);
     // Search
     const query = [];
 
@@ -140,7 +138,11 @@ exports.getAllContactUsForm = async (req, res) => {
           limit: recordLimit,
           offset: offSet,
           where: { [Op.and]: query },
-          order: [["createdAt", "DESC"]],
+          include: [{ model: CSLeadLog, as: "leadLogs" }],
+          order: [
+            ["createdAt", "DESC"],
+            [{ model: CSLeadLog, as: "leadLogs" }, "createdAt", "ASC"],
+          ],
         }),
         ContactUsForm.count({ where: { [Op.and]: query } }),
       ]);

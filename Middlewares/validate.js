@@ -32,6 +32,20 @@ exports.validateAdminLogin = (data) => {
   return schema.validate(data);
 };
 
+exports.validateEmployeeLogin = (data) => {
+  const schema = joi.object().keys({
+    email: joi.string().email().required().label("Email"),
+    device_token: joi.string().required(),
+    password: joi
+      .string()
+      // .regex(RegExp(pattern))
+      .required()
+      .min(8)
+      .max(20),
+  });
+  return schema.validate(data);
+};
+
 exports.changePassword = (data) => {
   const schema = joi.object().keys({
     email: joi.string().email().required().label("Email"),
@@ -186,6 +200,18 @@ exports.validateEmployeeRegistration = (data) => {
       .required()
       .min(8)
       .max(20),
+  });
+  return schema.validate(data);
+};
+
+exports.cSLeadBlogValidation = (data) => {
+  const schema = joi.object().keys({
+    cSLeadId: joi.string().required(),
+    nextCallTime: joi.string().optional(),
+    isNextCall: joi.boolean().required(),
+    callStatus: joi.string().required(),
+    legalDomain: joi.string().required(),
+    leadCategory: joi.string().required(),
   });
   return schema.validate(data);
 };

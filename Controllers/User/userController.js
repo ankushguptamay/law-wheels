@@ -126,7 +126,6 @@ exports.otpVerification = async (req, res) => {
     // Validate body
     const { error } = otpVerification(req.body);
     if (error) {
-      // console.log(error);
       return res.status(400).send(error.details[0].message);
     }
     const { mobileNumber, mobileOTP } = req.body;

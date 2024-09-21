@@ -1,7 +1,8 @@
 const db = require("../../Models");
 const Employee = db.employee;
+const Notification = db.notification;
 const {
-  validateAdminLogin,
+  validateEmployeeLogin,
   validateEmployeeRegistration,
   changePassword,
 } = require("../../Middlewares/validate");
@@ -50,11 +51,11 @@ exports.registerEmployee = async (req, res) => {
 
 exports.loginEmployee = async (req, res) => {
   try {
-    const { error } = validateAdminLogin(req.body);
+    const { error } = validateEmployeeLogin(req.body);
     if (error) {
-      console.log(error);
       return res.status(400).json(error.details[0].message);
     }
+    const device_token = req.body.device_token;
     const employee = await Employee.findOne({
       where: {
         email: req.body.email,
@@ -76,6 +77,13 @@ exports.loginEmployee = async (req, res) => {
         message: "Invalid email or password!",
       });
     }
+    // Device token
+    await employee.update({ device_token });
+    await Notification.update(
+      { device_token },
+      { where: { receiverId: employee.id } }
+    );
+    // Auth Token
     const data = {
       id: employee.id,
       email: req.body.email,
@@ -104,7 +112,6 @@ exports.changePassword = async (req, res) => {
   try {
     const { error } = changePassword(req.body);
     if (error) {
-      console.log(error);
       return res.status(400).json(error.details[0].message);
     }
     const employee = await Employee.findOne({

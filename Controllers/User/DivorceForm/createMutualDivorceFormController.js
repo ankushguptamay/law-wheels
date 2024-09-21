@@ -16,7 +16,6 @@ exports.createHeDetails = async (req, res) => {
     // Validate body
     const { error } = createHeDetails(req.body);
     if (error) {
-      console.log(error);
       return res.status(400).json(error.details[0].message);
     }
     const {
@@ -60,7 +59,6 @@ exports.createSheDetails = async (req, res) => {
     // Validate body
     const { error } = createSheDetails(req.body);
     if (error) {
-      console.log(error);
       return res.status(400).json(error.details[0].message);
     }
     const {
@@ -111,7 +109,6 @@ exports.createRequiredDetails = async (req, res) => {
     // Validate body
     const { error } = createRequiredDetails(req.body);
     if (error) {
-      console.log(error);
       return res.status(400).json(error.details[0].message);
     }
     await MutualDivorceForm.update(
@@ -135,7 +132,6 @@ exports.createHeDetailsByWebSite = async (req, res) => {
     // Validate body
     const { error } = createHeDetails(req.body);
     if (error) {
-      console.log(error);
       return res.status(400).json(error.details[0].message);
     }
     const {
@@ -227,7 +223,6 @@ exports.createSheDetailsByWebSite = async (req, res) => {
     // Validate body
     const { error } = createSheDetails(req.body);
     if (error) {
-      console.log(error);
       return res.status(400).json(error.details[0].message);
     }
     const {
@@ -316,7 +311,6 @@ exports.createRequiredDetailsByWebSite = async (req, res) => {
     // Validate body
     const { error } = createRequiredDetails(req.body);
     if (error) {
-      console.log(error);
       return res.status(400).json(error.details[0].message);
     }
     await MutualDivorceForm.update(

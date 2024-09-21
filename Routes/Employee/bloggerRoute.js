@@ -43,6 +43,9 @@ const {
   addCategoryToBlog,
   addTagToBlog,
 } = require("../../Controllers/Employee/blogController");
+const {
+  getEmployeeNotification,
+} = require("../../Controllers/Admin/notificationController");
 
 //middleware
 const { verifyEmployeeToken } = require("../../Middlewares/verifyJWT");
@@ -122,5 +125,12 @@ router.put("/deleteCategoryFromBlog/:slug", deleteCategoryFromBlog);
 router.put("/deleteTagFromBlog/:slug", deleteTagFromBlog);
 router.put("/addCategoryToBlog", addCategoryToBlog);
 router.put("/addTagToBlog", addTagToBlog);
+
+router.get(
+  "/notification",
+  verifyEmployeeToken,
+  isBloggerEmployeePresent,
+  getEmployeeNotification
+);
 
 module.exports = router;

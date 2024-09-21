@@ -5,6 +5,12 @@ const {
   getAllContactUsLeadBDA,
   getContactUsLeadDetails,
 } = require("../../Controllers/Admin/cantactUsFormModel");
+const {
+  addLeadsLog,
+} = require("../../Controllers/Employee/cSLeadLogController");
+const {
+  getEmployeeNotification
+} = require("../../Controllers/Admin/notificationController");
 
 //middleware
 const { verifyEmployeeToken } = require("../../Middlewares/verifyJWT");
@@ -22,6 +28,20 @@ router.get(
   verifyEmployeeToken,
   isBDAEmployeePresent,
   getAllContactUsLeadBDA
+);
+
+router.post(
+  "/leadsLog",
+  verifyEmployeeToken,
+  isBDAEmployeePresent,
+  addLeadsLog
+);
+
+router.get(
+  "/notification",
+  verifyEmployeeToken,
+  isBDAEmployeePresent,
+  getEmployeeNotification
 );
 
 module.exports = router;

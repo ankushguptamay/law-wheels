@@ -6,7 +6,10 @@ const admin = require("./Routes/adminRoute");
 const user = require("./Routes/userRoute");
 const BDA = require("./Routes/Employee/BDARoute");
 const blogger = require("./Routes/Employee/bloggerRoute");
-const employee = require("./Routes/Employee/employeeRoute")
+const employee = require("./Routes/Employee/employeeRoute");
+const {
+  pushNotification,
+} = require("./Featurer/scheduledPushNotificationToEmployee");
 // const os = require('os');
 // const cpus = os.cpus().length;
 // console.log(cpus);
@@ -18,6 +21,8 @@ var corsOptions = {
 };
 
 const db = require("./Models");
+const { Op } = require("sequelize");
+const Notification = db.notification;
 db.sequelize
   .sync()
   .then(() => {
@@ -31,6 +36,18 @@ app.use(cors(corsOptions));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// Push Notification
+const date = new Date();
+Notification.findAll({
+  where: { scheduleTime: { [Op.gte]: date } },
+})
+  .then((data) => {
+    pushNotification(data);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 app.use("/files", express.static("./Resource"));
 
