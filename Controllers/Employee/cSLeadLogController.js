@@ -24,6 +24,7 @@ exports.addLeadsLog = async (req, res) => {
       callStatus,
       legalDomain,
       leadCategory,
+      comment,
     } = req.body;
     if (isNextCall) {
       if (!nextCallTime) {
@@ -40,6 +41,7 @@ exports.addLeadsLog = async (req, res) => {
       callStatus,
       legalDomain,
       leadCategory,
+      comment,
       employeeId: req.employee.id,
     });
     // Create notification

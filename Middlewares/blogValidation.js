@@ -49,7 +49,7 @@ exports.blogValidation = (data) => {
     readTime: joi.string().required(),
     publishDate: joi.string().required(),
     status: joi.string().valid("Draft", "Published").required(),
-    description: joi.string().min(20).optional(),
+    metaTag: joi.string().min(20).optional(),
   });
   return schema.validate(data);
 };

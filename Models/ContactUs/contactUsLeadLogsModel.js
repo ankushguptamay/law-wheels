@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: false,
     },
     nextCallTime: { type: DataTypes.DATE, allowNull: true },
+    comment: { type: DataTypes.TEXT },
     cSLeadId: {
       type: DataTypes.UUID,
       references: {

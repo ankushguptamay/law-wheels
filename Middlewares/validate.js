@@ -212,6 +212,7 @@ exports.cSLeadBlogValidation = (data) => {
     callStatus: joi.string().required(),
     legalDomain: joi.string().required(),
     leadCategory: joi.string().required(),
+    comment: joi.string().optional(),
   });
   return schema.validate(data);
 };

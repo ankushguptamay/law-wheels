@@ -47,7 +47,7 @@ exports.createBlog = async (req, res) => {
       readTime,
       publishDate,
       status,
-      description,
+      metaTag,
     } = req.body;
 
     const isBlog = await Blog.findOne({ where: { slug: slug } });
@@ -75,7 +75,7 @@ exports.createBlog = async (req, res) => {
       readTime,
       publishDate,
       status,
-      description,
+      metaTag,
       employeeId: req.employee.id,
     };
     // Create this if not exist
@@ -308,7 +308,7 @@ exports.updateBlog = async (req, res) => {
         message: error.details[0].message,
       });
     }
-    const { slug, title, content, readTime, publishDate, status, description } =
+    const { slug, title, content, readTime, publishDate, status, metaTag } =
       req.body;
     const isBlog = await Blog.findOne({ where: { id: req.params.id } });
     if (!isBlog) {
@@ -333,7 +333,7 @@ exports.updateBlog = async (req, res) => {
       readTime,
       publishDate,
       status,
-      description,
+      metaTag,
     };
 
     // update

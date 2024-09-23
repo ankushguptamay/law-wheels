@@ -179,6 +179,16 @@ db.contactUsForm.hasMany(db.contactUsLeadLogs, {
 //     console.log(err);
 //   });
 // queryInterface
+//   .addColumn("cSLeadLogs", "comment", {
+//     type: DataTypes.TEXT,
+//   })
+//   .then((res) => {
+//     console.log("added!");
+//   })
+//   .catch((err) => {
+//     console.log(err);
+//   });
+// queryInterface
 //   .removeColumn("blogs", "description")
 //   .then((res) => {
 //     console.log("removed!");
