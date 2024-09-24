@@ -168,15 +168,15 @@ db.contactUsForm.hasMany(db.contactUsLeadLogs, {
 //   .catch((err) => {
 //     console.log(err);
 //   });
-queryInterface
-  .addColumn("blogs", "description", {
-    type: DataTypes.TEXT,
-  })
-  .then((res) => {
-    console.log("added1!");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+// queryInterface
+//   .addColumn("blogs", "description", {
+//     type: DataTypes.TEXT,
+//   })
+//   .then((res) => {
+//     console.log("added1!");
+//   })
+//   .catch((err) => {
+//     console.log(err);
+//   });
 
 module.exports = db;
