@@ -82,26 +82,33 @@ exports.createBlog = async (req, res) => {
     const blog = await Blog.create(data);
 
     //Add category association
-    for (let i = 0; i < categorys.length; i++) {
-      const [record, isCreated] = await BlogCategoryAssociaction.findOrCreate({
-        where: { blogId: blog.id, blogCategoryId: categorys[i].id }, // Condition to check if the record exists
-        defaults: {
-          blogId: blog.id,
-          blogCategoryId: categorys[i].id,
-          categorySlug: categorys[i].slug,
-        },
-      });
+    if (categorys) {
+      for (let i = 0; i < categorys.length; i++) {
+        console.log("categores");
+        const [record, isCreated] = await BlogCategoryAssociaction.findOrCreate(
+          {
+            where: { blogId: blog.id, blogCategoryId: categorys[i].id }, // Condition to check if the record exists
+            defaults: {
+              blogId: blog.id,
+              blogCategoryId: categorys[i].id,
+              categorySlug: categorys[i].slug,
+            },
+          }
+        );
+      }
     }
     //Add tag association
-    for (let i = 0; i < tags.length; i++) {
-      const [record, isCreated] = await BlogTagAssociation.findOrCreate({
-        where: { blogId: blog.id, blogTagId: tags[i].id }, // Condition to check if the record exists
-        defaults: {
-          blogId: blog.id,
-          blogTagId: tags[i].id,
-          tagSlug: tags[i].slug,
-        },
-      });
+    if (tags) {
+      for (let i = 0; i < tags.length; i++) {
+        const [record, isCreated] = await BlogTagAssociation.findOrCreate({
+          where: { blogId: blog.id, blogTagId: tags[i].id }, // Condition to check if the record exists
+          defaults: {
+            blogId: blog.id,
+            blogTagId: tags[i].id,
+            tagSlug: tags[i].slug,
+          },
+        });
+      }
     }
 
     // Upload Images
@@ -841,15 +848,19 @@ exports.addCategoryToBlog = async (req, res) => {
       });
     }
     //Add category association
-    for (let i = 0; i < categorys.length; i++) {
-      const [record, isCreated] = await BlogCategoryAssociaction.findOrCreate({
-        where: { blogId: blogId, blogCategoryId: categorys[i].id }, // Condition to check if the record exists
-        defaults: {
-          blogId: blogId,
-          blogCategoryId: categorys[i].id,
-          categorySlug: categorys[i].slug,
-        },
-      });
+    if (categorys) {
+      for (let i = 0; i < categorys.length; i++) {
+        const [record, isCreated] = await BlogCategoryAssociaction.findOrCreate(
+          {
+            where: { blogId: blogId, blogCategoryId: categorys[i].id }, // Condition to check if the record exists
+            defaults: {
+              blogId: blogId,
+              blogCategoryId: categorys[i].id,
+              categorySlug: categorys[i].slug,
+            },
+          }
+        );
+      }
     }
     res
       .status(200)
@@ -881,15 +892,17 @@ exports.addTagToBlog = async (req, res) => {
       });
     }
     //Add tag association
-    for (let i = 0; i < tags.length; i++) {
-      const [record, isCreated] = await BlogTagAssociation.findOrCreate({
-        where: { blogId: blogId, blogTagId: tags[i].id }, // Condition to check if the record exists
-        defaults: {
-          blogId: blogId,
-          blogTagId: tags[i].id,
-          tagSlug: tags[i].slug,
-        },
-      });
+    if (tags) {
+      for (let i = 0; i < tags.length; i++) {
+        const [record, isCreated] = await BlogTagAssociation.findOrCreate({
+          where: { blogId: blogId, blogTagId: tags[i].id }, // Condition to check if the record exists
+          defaults: {
+            blogId: blogId,
+            blogTagId: tags[i].id,
+            tagSlug: tags[i].slug,
+          },
+        });
+      }
     }
     res
       .status(200)
