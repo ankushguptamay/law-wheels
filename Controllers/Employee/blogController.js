@@ -84,7 +84,6 @@ exports.createBlog = async (req, res) => {
     //Add category association
     if (categorys) {
       for (let i = 0; i < categorys.length; i++) {
-        console.log("categores");
         const [record, isCreated] = await BlogCategoryAssociaction.findOrCreate(
           {
             where: { blogId: blog.id, blogCategoryId: categorys[i].id }, // Condition to check if the record exists
@@ -110,7 +109,9 @@ exports.createBlog = async (req, res) => {
         });
       }
     }
-
+    console.log(
+      `${process.env.SHOW_BUNNY_FILE_HOSTNAME}/${bunnyFolderName}/${req.files.FeaturedPic[0].filename}`
+    );
     // Upload Images
     if (req.files) {
       if (req.files.FeaturedPic) {

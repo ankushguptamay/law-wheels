@@ -65,7 +65,7 @@ exports.isBDAEmployeePresent = async (req, res, next) => {
     if (!admin) {
       return res.status(400).json({
         success: false,
-        message: "Admin is not present!",
+        message: "BDA is not present!",
       });
     }
     req.employee = admin;
@@ -92,7 +92,7 @@ exports.isBloggerEmployeePresent = async (req, res, next) => {
     if (!admin) {
       return res.status(400).json({
         success: false,
-        message: "Admin is not present!",
+        message: "Blogger is not present!",
       });
     }
     next();
