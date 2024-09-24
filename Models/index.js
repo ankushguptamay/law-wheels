@@ -158,8 +158,9 @@ db.contactUsForm.hasMany(db.contactUsLeadLogs, {
 //   });
 
 // queryInterface
-//   .addColumn("employees", "device_token", {
-//     type: DataTypes.STRING(1234),
+//   .addColumn("contactUsForms", "isMobileVerified", {
+//     type: DataTypes.BOOLEAN,
+//     defaultValue: false,
 //   })
 //   .then((res) => {
 //     console.log("added1!");
@@ -167,33 +168,15 @@ db.contactUsForm.hasMany(db.contactUsLeadLogs, {
 //   .catch((err) => {
 //     console.log(err);
 //   });
-// queryInterface
-//   .addColumn("blogs", "metaTag", {
-//     type: DataTypes.TEXT,
-//   })
-//   .then((res) => {
-//     console.log("added2!");
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//   });
-// queryInterface
-//   .addColumn("cSLeadLogs", "comment", {
-//     type: DataTypes.TEXT,
-//   })
-//   .then((res) => {
-//     console.log("added3!");
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//   });
-// queryInterface
-//   .removeColumn("blogs", "description")
-//   .then((res) => {
-//     console.log("removed!");
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//   });
+queryInterface
+  .addColumn("blogs", "description", {
+    type: DataTypes.TEXT,
+  })
+  .then((res) => {
+    console.log("added1!");
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 module.exports = db;
