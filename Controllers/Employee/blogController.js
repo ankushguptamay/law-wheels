@@ -632,6 +632,7 @@ exports.getBlogBySlug = async (req, res) => {
 exports.getBlogBySlugForUser = async (req, res) => {
   try {
     const today = new Date();
+    today.setMinutes(today.getMinutes() + 330);
     const isBlog = await Blog.findOne({
       where: {
         slug: req.params.slug,
@@ -699,6 +700,8 @@ exports.getBlogBySlugForUser = async (req, res) => {
 
 exports.getBlogsForUser = async (req, res) => {
   try {
+    const today = new Date();
+    today.setMinutes(today.getMinutes() + 330);
     const { limit, page, search } = req.query;
     // Pagination
     const recordLimit = parseInt(limit) || 10;
