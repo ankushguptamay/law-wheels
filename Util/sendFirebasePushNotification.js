@@ -1,5 +1,5 @@
 const admin = require("firebase-admin");
-const serviceAccount = require("../firebase-adminsdk.json");
+// const serviceAccount = require("../firebase-adminsdk.json");
 // Decode the base64 string
 const firebaseConfigBase64 = process.env.FIREBASE_CONFIG_BASE64;
 const firebaseConfig = JSON.parse(Buffer.from(firebaseConfigBase64, 'base64').toString('utf8'));
