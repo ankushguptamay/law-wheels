@@ -88,6 +88,6 @@ router.get("/heartAPI", heartAPI);
 
 // Blog
 router.get("/blog", getBlogsForUser);
-router.get("/blog/:id", getBlogBySlugForUser);
+router.get("/blog/:slug", getBlogBySlugForUser);
 
 module.exports = router;
