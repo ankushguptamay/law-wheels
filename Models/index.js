@@ -157,20 +157,10 @@ db.contactUsForm.hasMany(db.contactUsLeadLogs, {
 //     console.log(err);
 //   });
 
-queryInterface
-  .addColumn("contactUsForms", "isMobileVerified", {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false,
-  })
-  .then((res) => {
-    console.log("added1!");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
 // queryInterface
-//   .addColumn("blogs", "description", {
-//     type: DataTypes.TEXT,
+//   .addColumn("contactUsForms", "isMobileVerified", {
+//     type: DataTypes.BOOLEAN,
+//     defaultValue: false,
 //   })
 //   .then((res) => {
 //     console.log("added1!");
