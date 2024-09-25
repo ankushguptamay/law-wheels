@@ -25,6 +25,8 @@ const {
 } = require("../Controllers/Employee/blogController");
 const {
   createContactUsForm,
+  leadOtpVerification,
+  reSendLeadOtp,
 } = require("../Controllers/Admin/cantactUsFormModel");
 const { createReachOut } = require("../Controllers/Admin/reachOutController");
 const {
@@ -79,6 +81,8 @@ router.get("/mutualDivorceDetailBanners", getMutualDivorceDetail);
 
 // Contact Us
 router.post("/contactUsForm", createContactUsForm);
+router.post("/leadOtpVerification", leadOtpVerification);
+router.post("/reSendLeadOtp/:id", reSendLeadOtp);
 
 // Reach out
 router.post("/reachOut", createReachOut);

@@ -175,6 +175,13 @@ exports.contactUsForm = (data) => {
   return schema.validate(data);
 };
 
+exports.leadOtpVerification = (data) => {
+  const schema = joi.object().keys({
+    leadId: joi.string().required(),
+    mobileOTP: joi.string().length(6).required(),
+  });
+  return schema.validate(data);
+};
 exports.reachOutValidation = (data) => {
   const schema = joi.object().keys({
     name: joi.string().min(3).max(30).required(),

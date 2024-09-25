@@ -23,6 +23,10 @@ module.exports = (sequelize, DataTypes) => {
     mobileNumber: {
       type: DataTypes.STRING,
     },
+    isMobileVerified: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     data_from_page: {
       type: DataTypes.STRING,
       validate: {

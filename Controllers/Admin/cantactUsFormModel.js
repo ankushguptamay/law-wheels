@@ -1,9 +1,15 @@
 const db = require("../../Models");
-const { contactUsForm } = require("../../Middlewares/validate");
+const {
+  contactUsForm,
+  leadOtpVerification,
+} = require("../../Middlewares/validate");
 const { Op } = require("sequelize");
+const generateOTP = require("../../Util/generateOTP");
+const { sendOTP } = require("../../Util/sendOTPToMobileNumber");
 const ContactUsForm = db.contactUsForm;
 const Employee = db.employee;
 const CSLeadLog = db.contactUsLeadLogs;
+const LeadOTP = db.emailOTP;
 
 exports.createContactUsForm = async (req, res) => {
   try {
@@ -13,6 +19,20 @@ exports.createContactUsForm = async (req, res) => {
       return res.status(400).json(error.details[0].message);
     }
     const form = await ContactUsForm.create(req.body);
+
+    // Send OTP to mobile number
+    // Generate OTP for Email
+    const otp = generateOTP.generateFixedLengthRandomNumber(
+      process.env.OTP_DIGITS_LENGTH
+    );
+    // Sending OTP to mobile number
+    await sendOTP(req.body.mobileNumber, otp);
+    // Store OTP
+    await LeadOTP.create({
+      validTill: new Date().getTime() + parseInt(process.env.OTP_VALIDITY),
+      otp: otp,
+      receiverId: form.id,
+    });
 
     // Assign
     const today = new Date();
@@ -31,7 +51,11 @@ exports.createContactUsForm = async (req, res) => {
     if (totalBDA === 0) {
       return res.status(200).send({
         success: true,
-        message: `Contact us form created successfully!`,
+        message: `Contact us form created successfully! OTP send to ${req.body.mobileNumber}!`,
+        data: {
+          id: form.id,
+          mobileNumber: req.body.mobileNumber,
+        },
       });
     } else if (totalBDA === 1) {
       await form.update({
@@ -55,10 +79,105 @@ exports.createContactUsForm = async (req, res) => {
     }
     res.status(200).json({
       success: true,
-      message: "Contact us form created successfully!",
+      message: `Contact us form created successfully! OTP send to ${req.body.mobileNumber}!`,
+      data: {
+        id: form.id,
+        mobileNumber: req.body.mobileNumber,
+      },
     });
   } catch (err) {
     res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+exports.reSendLeadOtp = async (req, res) => {
+  try {
+    // Checking is lead present or not
+    const lead = await ContactUsForm.findOne({
+      where: { id: req.params.id },
+    });
+    if (!lead) {
+      return res.status(400).send({
+        success: false,
+        message: "No Details Found!",
+      });
+    }
+    // Send OTP to mobile number
+    // Generate OTP for Email
+    const otp = generateOTP.generateFixedLengthRandomNumber(
+      process.env.OTP_DIGITS_LENGTH
+    );
+    // Sending OTP to mobile number
+    await sendOTP(lead.mobileNumber, otp);
+    // Store OTP
+    await LeadOTP.create({
+      validTill: new Date().getTime() + parseInt(process.env.OTP_VALIDITY),
+      otp: otp,
+      receiverId: lead.id,
+    });
+    res.status(201).send({
+      success: true,
+      message: `OTP send to ${lead.mobileNumber}!`,
+      data: {
+        id: lead.id,
+        mobileNumber: req.body.mobileNumber,
+      },
+    });
+  } catch (err) {
+    res.status(500).send({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+exports.leadOtpVerification = async (req, res) => {
+  try {
+    // Validate body
+    const { error } = leadOtpVerification(req.body);
+    if (error) {
+      return res.status(400).send(error.details[0].message);
+    }
+    const { leadId, mobileOTP } = req.body;
+    // Is Mobile Otp exist
+    const isOtp = await LeadOTP.findOne({
+      where: { otp: mobileOTP, receiverId: leadId },
+    });
+    if (!isOtp) {
+      return res.status(400).send({
+        success: false,
+        message: `Invalid OTP!`,
+      });
+    }
+    // Checking is lead present or not
+    const lead = await ContactUsForm.findOne({
+      where: { id: leadId },
+    });
+    if (!lead) {
+      return res.status(400).send({
+        success: false,
+        message: "No Details Found!",
+      });
+    }
+    // is email otp expired?
+    const isOtpExpired = new Date().getTime() > parseInt(isOtp.validTill);
+    await LeadOTP.destroy({ where: { receiverId: isOtp.receiverId } });
+    if (isOtpExpired) {
+      return res.status(400).send({
+        success: false,
+        message: `OTP expired!`,
+      });
+    }
+    await lead.update({ isMobileVerified: true });
+    res.status(201).send({
+      success: true,
+      message: `OTP verify successfully!`,
+    });
+  } catch (err) {
+    res.status(500).send({
       success: false,
       message: err.message,
     });
