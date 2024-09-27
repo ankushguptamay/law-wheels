@@ -161,9 +161,8 @@ exports.createRequiredDetails = (data) => {
 
 exports.contactUsForm = (data) => {
   const schema = joi.object().keys({
-    firstName: joi.string().min(3).max(30).required(),
+    name: joi.string().min(3).max(30).required(),
     email: joi.string().email().required().label("Email"),
-    lastName: joi.string().min(3).max(30).required(),
     mobileNumber: joi
       .string()
       .length(10)

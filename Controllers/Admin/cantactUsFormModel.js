@@ -6,6 +6,7 @@ const {
 const { Op } = require("sequelize");
 const generateOTP = require("../../Util/generateOTP");
 const { sendOTP } = require("../../Util/sendOTPToMobileNumber");
+const { capitalizeFirstLetter } = require("../../Util/capitalizeFirstLetter");
 const ContactUsForm = db.contactUsForm;
 const Employee = db.employee;
 const CSLeadLog = db.contactUsLeadLogs;
@@ -18,7 +19,9 @@ exports.createContactUsForm = async (req, res) => {
     if (error) {
       return res.status(400).json(error.details[0].message);
     }
-    const form = await ContactUsForm.create(req.body);
+
+    const name = capitalizeFirstLetter(req.body.name);
+    const form = await ContactUsForm.create({ ...req.body, name });
 
     // Send OTP to mobile number
     // Generate OTP for Email
@@ -26,7 +29,7 @@ exports.createContactUsForm = async (req, res) => {
       process.env.OTP_DIGITS_LENGTH
     );
     // Sending OTP to mobile number
-    await sendOTP(req.body.mobileNumber, otp);
+    sendOTP(req.body.mobileNumber, otp);
     // Store OTP
     await LeadOTP.create({
       validTill: new Date().getTime() + parseInt(process.env.OTP_VALIDITY),
@@ -111,7 +114,7 @@ exports.reSendLeadOtp = async (req, res) => {
       process.env.OTP_DIGITS_LENGTH
     );
     // Sending OTP to mobile number
-    await sendOTP(lead.mobileNumber, otp);
+    sendOTP(lead.mobileNumber, otp);
     // Store OTP
     await LeadOTP.create({
       validTill: new Date().getTime() + parseInt(process.env.OTP_VALIDITY),
@@ -203,7 +206,7 @@ exports.getAllContactUsForm = async (req, res) => {
     if (search) {
       query.push({
         [Op.or]: [
-          { firstName: { [Op.substring]: search } },
+          { name: { [Op.substring]: search } },
           { slug: { [Op.substring]: search } },
           { lastName: { [Op.substring]: search } },
           { email: { [Op.substring]: search } },
@@ -374,7 +377,7 @@ exports.getAllContactUsLeadBDA = async (req, res) => {
     if (search) {
       query.push({
         [Op.or]: [
-          { firstName: { [Op.substring]: search } },
+          { name: { [Op.substring]: search } },
           { slug: { [Op.substring]: search } },
           { lastName: { [Op.substring]: search } },
           { email: { [Op.substring]: search } },
@@ -457,6 +460,37 @@ exports.getContactUsLeadDetails = async (req, res) => {
         success: false,
         message: "Contact us details is not present!",
       });
+    }
+    res.status(200).json({
+      success: true,
+      message: "Contact us form fetched successfully!",
+      data: leads,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+const nameAdd = async (req, res) => {
+  try {
+    const leads = await ContactUsForm.findAll({
+      order: [["createdAt", "ASC"]],
+    });
+    for (let i = 0; i < leads.length; i++) {
+      const firstName = leads[i].firstName
+        ? capitalizeFirstLetter(leads[i].firstName)
+        : null;
+      const lastName = leads[i].lastName
+        ? capitalizeFirstLetter(leads[i].lastName)
+        : null;
+      let name = firstName;
+      if (lastName) {
+        name = `${firstName} ${lastName}`;
+      }
+      await leads[i].update({ name });
     }
     res.status(200).json({
       success: true,
