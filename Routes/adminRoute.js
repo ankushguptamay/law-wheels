@@ -17,7 +17,7 @@ const { getAllUser } = require("../Controllers/User/userController");
 const { getAllReachOut } = require("../Controllers/Admin/reachOutController");
 const {
   getAllContactUsForm,
-  getContactUsAnalytics,nameAdd
+  getContactUsAnalytics
 } = require("../Controllers/Admin/cantactUsFormModel");
 const {
   addBanner,
@@ -110,12 +110,6 @@ router.get(
   verifyAdminToken,
   isAdminPresent,
   getAllContactUsForm
-);
-router.get(
-  "/nameAdd",
-  verifyAdminToken,
-  isAdminPresent,
-  nameAdd
 );
 
 // reach Out
