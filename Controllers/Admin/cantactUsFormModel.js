@@ -239,6 +239,13 @@ exports.getAllContactUsForm = async (req, res) => {
       const contactUs = await ContactUsForm.findAll({
         where: { [Op.and]: query },
         order: [["createdAt", "DESC"]],
+        include: [
+          {
+            model: Employee,
+            as: "employee",
+            attributes: ["id", "slug", "name"],
+          },
+        ],
       });
       res.status(200).json({
         success: true,
@@ -260,7 +267,14 @@ exports.getAllContactUsForm = async (req, res) => {
           limit: recordLimit,
           offset: offSet,
           where: { [Op.and]: query },
-          include: [{ model: CSLeadLog, as: "leadLogs" }],
+          include: [
+            { model: CSLeadLog, as: "leadLogs" },
+            {
+              model: Employee,
+              as: "employee",
+              attributes: ["id", "slug", "name"],
+            },
+          ],
           order: [
             ["createdAt", "DESC"],
             [{ model: CSLeadLog, as: "leadLogs" }, "createdAt", "ASC"],
