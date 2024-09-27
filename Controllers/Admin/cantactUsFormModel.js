@@ -474,23 +474,33 @@ exports.getContactUsLeadDetails = async (req, res) => {
   }
 };
 
-const nameAdd = async () => {
-  const leads = await ContactUsForm.findAll({
-    order: [["createdAt", "ASC"]],
-  });
-  for (let i = 0; i < leads.length; i++) {
-    const firstName = leads[i].firstName
-      ? capitalizeFirstLetter(leads[i].firstName)
-      : null;
-    const lastName = leads[i].lastName
-      ? capitalizeFirstLetter(leads[i].lastName)
-      : null;
-    let name = firstName;
-    if (lastName) {
-      name = `${firstName} ${lastName}`;
+exports.nameAdd = async (req,res) => {
+  try {
+    const leads = await ContactUsForm.findAll({
+      order: [["createdAt", "ASC"]],
+    });
+    for (let i = 0; i < leads.length; i++) {
+      const firstName = leads[i].firstName
+        ? capitalizeFirstLetter(leads[i].firstName)
+        : null;
+      const lastName = leads[i].lastName
+        ? capitalizeFirstLetter(leads[i].lastName)
+        : null;
+      let name = firstName;
+      if (lastName) {
+        name = `${firstName} ${lastName}`;
+      }
+      await leads[i].update({ name });
     }
-    await leads[i].update({ name });
+    res.status(200).json({
+      success: true,
+      message: "Contact us form fetched successfully!"
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 };
-
-nameAdd();
