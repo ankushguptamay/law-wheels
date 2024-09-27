@@ -168,7 +168,7 @@ db.contactUsForm.hasMany(db.contactUsLeadLogs, {
 //     console.log(err);
 //   });
 queryInterface
-  .addColumn("contactUsForms", "firstName")
+  .removeColumn("contactUsForms", "firstName")
   .then((res) => {
     console.log("remove!");
   })
@@ -176,7 +176,7 @@ queryInterface
     console.log(err);
   });
 queryInterface
-  .addColumn("contactUsForms", "lastName")
+  .removeColumn("contactUsForms", "lastName")
   .then((res) => {
     console.log("remove!");
   })
