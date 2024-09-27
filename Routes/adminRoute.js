@@ -8,7 +8,10 @@ const {
   updateAdminName,
   getAdmin,
 } = require("../Controllers/Admin/adminController");
-const { registerEmployee } = require("../Controllers/Employee/employeeCont");
+const {
+  registerEmployee,
+  getAllEmployee,
+} = require("../Controllers/Employee/employeeCont");
 const {
   getAllMutualDivorceForm,
   getMutualDivorceFormUserId,
@@ -17,7 +20,7 @@ const { getAllUser } = require("../Controllers/User/userController");
 const { getAllReachOut } = require("../Controllers/Admin/reachOutController");
 const {
   getAllContactUsForm,
-  getContactUsAnalytics
+  getContactUsAnalytics,
 } = require("../Controllers/Admin/cantactUsFormModel");
 const {
   addBanner,
@@ -35,92 +38,47 @@ const uploadImage = require("../Middlewares/image");
 router.post("/register", registerAdmin);
 router.post("/login", loginAdmin);
 router.post("/changePassword", changePassword);
-router.put(
-  "/updateAdminName",
-  verifyAdminToken,
-  isAdminPresent,
-  updateAdminName
-);
-router.get("/getAdmin", verifyAdminToken, isAdminPresent, getAdmin);
+
+router.use(verifyAdminToken);
+router.use(isAdminPresent);
+
+router.put("/updateAdminName", updateAdminName);
+router.get("/getAdmin", getAdmin);
 
 // User
-router.get("/users", verifyAdminToken, isAdminPresent, getAllUser);
+router.get("/users", getAllUser);
 
 // Employee
-router.post("/registerEmployee", verifyAdminToken, isAdminPresent, registerEmployee);
+router.post("/registerEmployee", registerEmployee);
+router.get("/employee", getAllEmployee);
 
 // router.get("/allMutualDivorceDetails", verifyAdminToken, isAdminPresent, getAllMutualDivorceForm);
-router.get(
-  "/mutualDivorceDetails/:id",
-  verifyAdminToken,
-  isAdminPresent,
-  getMutualDivorceFormUserId
-);
+router.get("/mutualDivorceDetails/:id", getMutualDivorceFormUserId);
 
 // Banner
-router.post(
-  "/addHomeScreen",
-  verifyAdminToken,
-  isAdminPresent,
-  uploadImage.single("HomeScreen"),
-  addBanner
-);
+router.post("/addHomeScreen", uploadImage.single("HomeScreen"), addBanner);
 router.post(
   "/addMutualDivorce",
-  verifyAdminToken,
-  isAdminPresent,
   uploadImage.single("MutualDivorce"),
   addBanner
 );
 router.post(
   "/addMutualDivorceDetail",
-  verifyAdminToken,
-  isAdminPresent,
   uploadImage.single("MutualDivorceDetails"),
   addBanner
 );
-router.delete(
-  "/deleteOfferImage/:id",
-  verifyAdminToken,
-  isAdminPresent,
-  softDeleteBanner
-);
-router.get(
-  "/homeScreenBanners",
-  verifyAdminToken,
-  isAdminPresent,
-  getHomeScreen
-);
-router.get(
-  "/mutualDivorceBanners",
-  verifyAdminToken,
-  isAdminPresent,
-  getMutualDivorce
-);
-router.get(
-  "/mutualDivorceDetailBanners",
-  verifyAdminToken,
-  isAdminPresent,
-  getMutualDivorceDetail
-);
+router.delete("/deleteOfferImage/:id", softDeleteBanner);
+router.get("/homeScreenBanners", getHomeScreen);
+router.get("/mutualDivorceBanners", getMutualDivorce);
+router.get("/mutualDivorceDetailBanners", getMutualDivorceDetail);
 
 // Contact Us
-router.get(
-  "/contactUsForm",
-  verifyAdminToken,
-  isAdminPresent,
-  getAllContactUsForm
-);
+router.get("/contactUsForm", getAllContactUsForm);
 
 // reach Out
-router.get("/reachOut", verifyAdminToken, isAdminPresent, getAllReachOut);
+router.get("/reachOut", getAllReachOut);
 
 // Dashboard
-router.get(
-  "/contactDashboard",
-  verifyAdminToken,
-  isAdminPresent,
-  getContactUsAnalytics
-);
+router.get("/contactDashboard", getContactUsAnalytics);
 
 module.exports = router;

@@ -220,3 +220,54 @@ exports.getEmployee = async (req, res) => {
     });
   }
 };
+
+exports.getAllEmployee = async (req, res) => {
+  try {
+    const { limit, page, search } = req.query;
+    // Pagination
+    const recordLimit = parseInt(limit) || 10;
+    let offSet = 0;
+    let currentPage = 1;
+    if (page) {
+      offSet = (parseInt(page) - 1) * recordLimit;
+      currentPage = parseInt(page);
+    }
+
+    //Search
+    let query = {};
+    if (search) {
+      query = {
+        [Op.or]: [
+          { slug: { [Op.substring]: search } },
+          { name: { [Op.substring]: search } },
+          { emial: { [Op.substring]: search } },
+          { role: { [Op.substring]: search } },
+        ],
+      };
+    }
+
+    const [employee, totalEmployee] = await Promise.all([
+      Employee.findAll({
+        where: query,
+        attributes: { exclude: ["password","device_token","updatedAt"] },
+        limit: recordLimit,
+        offset: offSet,
+        order: [["createdAt", "DESC"]],
+      }),
+      Employee.count({ where: query }),
+    ]);
+    const totalPages = Math.ceil(totalEmployee / recordLimit) || 0;
+    res.status(200).json({
+      success: true,
+      message: "Employee Profile Fetched successfully!",
+      data: employee,
+      totalPages: totalPages,
+      currentPage,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
