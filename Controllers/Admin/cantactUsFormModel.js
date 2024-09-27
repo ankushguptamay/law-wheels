@@ -504,3 +504,5 @@ const nameAdd = async (req, res) => {
     });
   }
 };
+
+nameAdd();
