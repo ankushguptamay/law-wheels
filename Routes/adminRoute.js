@@ -20,8 +20,16 @@ const { getAllUser } = require("../Controllers/User/userController");
 const { getAllReachOut } = require("../Controllers/Admin/reachOutController");
 const {
   getAllContactUsForm,
-  getContactUsAnalytics,
+  getContactUsLeadDetails,
 } = require("../Controllers/Admin/cantactUsFormModel");
+const {
+  getAllMDPFForm,
+  getMDPFLeadDetails,
+} = require("../Controllers/Admin/mDPetitionFormCont");
+const {
+  getContactUsAnalytics,
+  getMDPFAnalytics,
+} = require("../Controllers/Admin/dashBoard");
 const {
   addBanner,
   softDeleteBanner,
@@ -29,6 +37,10 @@ const {
   getMutualDivorce,
   getMutualDivorceDetail,
 } = require("../Controllers/Master/bannerController");
+const {
+  getMDPFLeadLog,
+} = require("../Controllers/Employee/mDPFLeadLogController");
+const { getCULeadLog } = require("../Controllers/Employee/cSLeadLogController");
 
 //middleware
 const { verifyAdminToken } = require("../Middlewares/verifyJWT");
@@ -74,11 +86,20 @@ router.get("/mutualDivorceDetailBanners", getMutualDivorceDetail);
 
 // Contact Us
 router.get("/contactUsForm", getAllContactUsForm);
+router.get("/contactUsForm/:id", getContactUsLeadDetails);
+
+router.get("/cUleadsLog/:id", getCULeadLog);
+
+router.get("/mDPForm", getAllMDPFForm);
+router.get("/mDPForm/:id", getMDPFLeadDetails);
+
+router.get("/mDPFLeadLogs/:id", getMDPFLeadLog);
 
 // reach Out
 router.get("/reachOut", getAllReachOut);
 
 // Dashboard
 router.get("/contactDashboard", getContactUsAnalytics);
+router.get("/mDPFDashboard", getMDPFAnalytics);
 
 module.exports = router;

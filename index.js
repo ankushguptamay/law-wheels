@@ -43,6 +43,7 @@ Notification.findAll({
   where: { scheduleTime: { [Op.gte]: date } },
 })
   .then((data) => {
+    console.log(data.length)
     pushNotification(data);
   })
   .catch((err) => {

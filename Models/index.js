@@ -35,6 +35,19 @@ db.contactUsForm = require("./ContactUs/contactUsFormModel.js")(
   sequelize,
   Sequelize
 );
+db.mDPetitionForm = require("./ContactUs/mutualDivorcePetitionFormModel.js")(
+  sequelize,
+  Sequelize
+);
+db.contactUsLeadLogs = require("./ContactUs/contactUsLeadLogsModel.js")(
+  sequelize,
+  Sequelize
+);
+db.mDPFLeadLogs = require("./ContactUs/mDPFLeadLogsModel.js")(
+  sequelize,
+  Sequelize
+);
+
 db.emailOTP = require("./User/emailOTPModel.js")(sequelize, Sequelize);
 
 db.banner = require("./Master/bannerModel.js")(sequelize, Sequelize);
@@ -51,10 +64,6 @@ db.blogTags = require("./Master/blogTagsModel.js")(sequelize, Sequelize);
 db.blogImages = require("./Blog/blogImgesModel.js")(sequelize, Sequelize);
 db.blog = require("./Blog/blogModel.js")(sequelize, Sequelize);
 db.blogCategoryAssociation = require("./Blog/blogCategoryAssociation.js")(
-  sequelize,
-  Sequelize
-);
-db.contactUsLeadLogs = require("./ContactUs/contactUsLeadLogsModel.js")(
   sequelize,
   Sequelize
 );
@@ -75,6 +84,15 @@ db.employee.hasMany(db.contactUsForm, {
   as: "contactUsForms",
 });
 db.contactUsForm.belongsTo(db.employee, {
+  foreignKey: "employeeId",
+  as: "employee",
+});
+
+db.employee.hasMany(db.mDPetitionForm, {
+  foreignKey: "employeeId",
+  as: "mDPetitionForm",
+});
+db.mDPetitionForm.belongsTo(db.employee, {
   foreignKey: "employeeId",
   as: "employee",
 });
@@ -144,6 +162,16 @@ db.contactUsForm.hasMany(db.contactUsLeadLogs, {
   as: "leadLogs",
 });
 
+db.employee.hasMany(db.mDPFLeadLogs, {
+  foreignKey: "employeeId",
+  as: "mDPFLeadLogs",
+});
+
+db.mDPetitionForm.hasMany(db.mDPFLeadLogs, {
+  foreignKey: "mDPFLeadId",
+  as: "leadLogs",
+});
+
 // To add a foriegn key in existing table
 // queryInterface
 //   .addColumn("contactUsForms", "employeeId", {
@@ -158,25 +186,12 @@ db.contactUsForm.hasMany(db.contactUsLeadLogs, {
 //   });
 
 // queryInterface
-//   .addColumn("contactUsForms", "name", {
+//   .changeColumn("notifications", "notificationRelatedTo", {
 //     type: DataTypes.STRING,
+//     validate: {
+//       isIn: [["ContactUsLead", "Profile", "MDPFLead"]],
+//     },
 //   })
-//   .then((res) => {
-//     console.log("added!");
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//   });
-// queryInterface
-//   .removeColumn("contactUsForms", "firstName")
-//   .then((res) => {
-//     console.log("remove!");
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//   });
-// queryInterface
-//   .removeColumn("contactUsForms", "lastName")
 //   .then((res) => {
 //     console.log("remove!");
 //   })

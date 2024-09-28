@@ -1,16 +1,16 @@
 const { Op } = require("sequelize");
-const { cSLeadLogValidation } = require("../../Middlewares/validate");
+const { mDPFLeadLogValidation } = require("../../Middlewares/validate");
 const {
   pushNotification,
 } = require("../../Featurer/scheduledPushNotificationToEmployee");
 const db = require("../../Models");
-const CSLeadLog = db.contactUsLeadLogs;
+const MDPFLeadLog = db.mDPFLeadLogs;
 const Notification = db.notification;
 
-exports.addCULeadsLog = async (req, res) => {
+exports.addMDPFLeadsLog = async (req, res) => {
   try {
     // Body Validation
-    const { error } = cSLeadLogValidation(req.body);
+    const { error } = mDPFLeadLogValidation(req.body);
     if (error) {
       return res.status(400).json({
         success: false,
@@ -18,7 +18,7 @@ exports.addCULeadsLog = async (req, res) => {
       });
     }
     const {
-      cSLeadId,
+      mDPFLeadId,
       nextCallTime,
       isNextCall,
       callStatus,
@@ -34,8 +34,8 @@ exports.addCULeadsLog = async (req, res) => {
         });
       }
     }
-    await CSLeadLog.create({
-      cSLeadId,
+    await MDPFLeadLog.create({
+      mDPFLeadId,
       nextCallTime,
       isNextCall,
       callStatus,
@@ -58,9 +58,9 @@ exports.addCULeadsLog = async (req, res) => {
         if (times[i].getTime() > new Date().getTime()) {
           notification.push({
             title: "Scheduled call!",
-            content: `Your have a scheduled at ${nextCallTime}`,
-            notificationRelatedTo: "ContactUsLead",
-            relatedId: cSLeadId,
+            content: `Your have a scheduled call at ${nextCallTime}`,
+            notificationRelatedTo: "MDPFLead",
+            relatedId: mDPFLeadId,
             scheduleTime: times[i],
             receiverId: req.employee.id,
             device_token: req.employee.device_token,
@@ -75,7 +75,7 @@ exports.addCULeadsLog = async (req, res) => {
     // Final response
     res.status(200).send({
       success: true,
-      message: `CSLeads log added successfully!`,
+      message: `Log added successfully!`,
     });
   } catch (err) {
     res.status(500).send({
@@ -85,10 +85,10 @@ exports.addCULeadsLog = async (req, res) => {
   }
 };
 
-exports.getCULeadLog = async (req, res) => {
+exports.getMDPFLeadLog = async (req, res) => {
   try {
-    const log = await CSLeadLog.create({
-      where: { cSLeadId: req.params.id },
+    const log = await MDPFLeadLog.create({
+      where: { mDPFLeadId: req.params.id },
       order: [["createdAt", "ASC"]],
     });
     // Final response

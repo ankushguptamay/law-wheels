@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     notificationRelatedTo: {
       type: DataTypes.STRING,
       validate: {
-        isIn: [["ContactUsLead", "Profile"]],
+        isIn: [["ContactUsLead", "Profile","MDPFLead"]],
       },
     },
     relatedId: { type: DataTypes.STRING },

@@ -28,6 +28,7 @@ const {
   leadOtpVerification,
   reSendLeadOtp,
 } = require("../Controllers/Admin/cantactUsFormModel");
+const { createMDPF } = require("../Controllers/Admin/mDPetitionFormCont");
 const { createReachOut } = require("../Controllers/Admin/reachOutController");
 const {
   getHomeScreen,
@@ -83,6 +84,8 @@ router.get("/mutualDivorceDetailBanners", getMutualDivorceDetail);
 router.post("/contactUsForm", createContactUsForm);
 router.post("/leadOtpVerification", leadOtpVerification);
 router.post("/reSendLeadOtp/:id", reSendLeadOtp);
+
+router.post("/mDPForm", createMDPF);
 
 // Reach out
 router.post("/reachOut", createReachOut);

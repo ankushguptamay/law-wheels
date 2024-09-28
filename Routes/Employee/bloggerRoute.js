@@ -6,6 +6,10 @@ const {
   getContactUsLeadDetails,
 } = require("../../Controllers/Admin/cantactUsFormModel");
 const {
+  getAllMDPFForm,
+  getMDPFLeadDetails,
+} = require("../../Controllers/Admin/mDPetitionFormCont");
+const {
   addCategories,
   addParentCategories,
   getCategories,
@@ -19,6 +23,9 @@ const {
   parentCategoryDetails,
   categoryDetails,
 } = require("../../Controllers/Master/blogCategoryCont");
+const {
+  getMDPFLeadLog,
+} = require("../../Controllers/Employee/mDPFLeadLogController");
 const {
   addTag,
   getTag,
@@ -46,6 +53,7 @@ const {
 const {
   getEmployeeNotification,
 } = require("../../Controllers/Admin/notificationController");
+const { getCULeadLog } = require("../../Controllers/Employee/cSLeadLogController");
 
 //middleware
 const { verifyEmployeeToken } = require("../../Middlewares/verifyJWT");
@@ -56,8 +64,14 @@ router.use(verifyEmployeeToken);
 router.use(isBloggerEmployeePresent);
 
 router.get("/contactLeads/:id", getContactUsLeadDetails);
-
 router.get("/contactLeads", getAllContactUsForm);
+
+router.get("/cUleadsLog/:id", getCULeadLog);
+
+router.get("/mDPForms/:id", getMDPFLeadDetails);
+router.get("/mDPForms", getAllMDPFForm);
+
+router.get("/mDPFLeadLogs/:id", getMDPFLeadLog);
 
 // Master
 router.post("/categories", uploadImage.single("CategoryPic"), addCategories);
@@ -126,11 +140,6 @@ router.put("/deleteTagFromBlog/:slug", deleteTagFromBlog);
 router.put("/addCategoryToBlog", addCategoryToBlog);
 router.put("/addTagToBlog", addTagToBlog);
 
-router.get(
-  "/notification",
-  verifyEmployeeToken,
-  isBloggerEmployeePresent,
-  getEmployeeNotification
-);
+router.get("/notification", getEmployeeNotification);
 
 module.exports = router;

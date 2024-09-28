@@ -210,7 +210,7 @@ exports.validateEmployeeRegistration = (data) => {
   return schema.validate(data);
 };
 
-exports.cSLeadBlogValidation = (data) => {
+exports.cSLeadLogValidation = (data) => {
   const schema = joi.object().keys({
     cSLeadId: joi.string().required(),
     nextCallTime: joi.string().optional(),
@@ -219,6 +219,38 @@ exports.cSLeadBlogValidation = (data) => {
     legalDomain: joi.string().required(),
     leadCategory: joi.string().required(),
     comment: joi.string().optional(),
+  });
+  return schema.validate(data);
+};
+
+exports.mDPFLeadLogValidation = (data) => {
+  const schema = joi.object().keys({
+    mDPFLeadId: joi.string().required(),
+    nextCallTime: joi.string().optional(),
+    isNextCall: joi.boolean().required(),
+    callStatus: joi.string().required(),
+    legalDomain: joi.string().required(),
+    leadCategory: joi.string().required(),
+    comment: joi.string().optional(),
+  });
+  return schema.validate(data);
+};
+
+exports.createMDPF = (data) => {
+  const schema = joi.object().keys({
+    you_are: joi.string().valid("Husband", "Wife").required(),
+    name: joi.string().required(),
+    spouse_name: joi.string().required(),
+    paper_in_60Min: joi.boolean().required(),
+    place_last_resided_together: joi.string().optional(),
+    date_last_resided_together: joi.string().optional(), // YYYY-MM-DD
+    total_payable_amount: joi.number().required(),
+    anyChild: joi.boolean().optional(),
+    your_contact_number: joi.string().required(),
+    your_current_address: joi.string().optional(),
+    your_email: joi.string().email().required(),
+    reason_for_divorce: joi.string().optional(),
+    term_accepted: joi.boolean().required(),
   });
   return schema.validate(data);
 };
