@@ -240,6 +240,7 @@ exports.createMDPF = (data) => {
   const schema = joi.object().keys({
     you_are: joi.string().valid("Husband", "Wife").required(),
     name: joi.string().required(),
+    marriage_date: joi.string().required(),
     spouse_name: joi.string().required(),
     paper_in_60Min: joi.boolean().required(),
     place_last_resided_together: joi.string().optional(),
