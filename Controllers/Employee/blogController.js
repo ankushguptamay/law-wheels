@@ -764,11 +764,28 @@ exports.getBlogsForUser = async (req, res) => {
     ]);
 
     const totalPages = Math.ceil(totalBlogs / recordLimit) || 0;
+    const transform = [];
+    for (let i = 0; i < blog.length; i++) {
+      const blogCategory_juctions = blog[i].blogCategory_juction;
+      const blogCategory_juction = [];
+      for (let j = 0; j < blogCategory_juctions.length; j++) {
+        const category = await BlogCategories.findOne({
+          where: { id: blogCategory_juctions[j].blogCategoryId },
+        });
+        if (category) {
+          blogCategory_juction.push({
+            ...blogCategory_juctions[j],
+            categoryName: category.dataValues.name,
+          });
+        }
+      }
+      transform.push({ ...blog[i].dataValues, blogCategory_juction });
+    }
 
     res.status(200).json({
       success: true,
       message: "Blog fetched successfully!",
-      data: blog,
+      data: transform,
       totalPages: totalPages,
       currentPage,
     });
