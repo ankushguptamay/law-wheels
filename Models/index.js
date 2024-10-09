@@ -185,19 +185,19 @@ db.mDPetitionForm.hasMany(db.mDPFLeadLogs, {
 //     console.log(err);
 //   });
 
-queryInterface
-  .changeColumn("contactUsForms", "data_from_page", {
-    type: DataTypes.STRING,
-    validate: {
-      isIn: [["Mutual Divorce", "Mutual Divorce 1", "Others"]],
-    },
-    defaultValue: "Others",
-  })
-  .then((res) => {
-    console.log("changed!");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+// queryInterface
+//   .changeColumn("contactUsForms", "data_from_page", {
+//     type: DataTypes.STRING,
+//     validate: {
+//       isIn: [["Mutual Divorce", "Mutual Divorce 1", "Others"]],
+//     },
+//     defaultValue: "Others",
+//   })
+//   .then((res) => {
+//     console.log("changed!");
+//   })
+//   .catch((err) => {
+//     console.log(err);
+//   });
 
 module.exports = db;
