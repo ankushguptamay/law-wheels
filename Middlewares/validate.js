@@ -171,7 +171,19 @@ exports.contactUsForm = (data) => {
     message: joi.string().min(20).max(1000).required(),
     data_from_page: joi
       .string()
-      .valid("Mutual Divorce", "Mutual Divorce 1")
+      .valid(
+        "Mutual Divorce",
+        "Mutual Divorce 1",
+        "Cheque Bounce",
+        "Corporate Law-IPR",
+        "Corporate Law-ALL",
+        "Corporate Law-CA",
+        "Corporate Law-EL",
+        "Corporate Law-BM",
+        "Matrimonial",
+        "Bail",
+        "Property Dispute"
+      )
       .optional(),
   });
   return schema.validate(data);

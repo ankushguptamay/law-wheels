@@ -27,7 +27,22 @@ module.exports = (sequelize, DataTypes) => {
     data_from_page: {
       type: DataTypes.STRING,
       validate: {
-        isIn: [["Mutual Divorce", "Mutual Divorce 1", "Others"]],
+        isIn: [
+          [
+            "Mutual Divorce",
+            "Mutual Divorce 1",
+            "Cheque Bounce",
+            "Corporate Law-IPR",
+            "Corporate Law-ALL",
+            "Corporate Law-CA",
+            "Corporate Law-EL",
+            "Corporate Law-BM",
+            "Matrimonial",
+            "Bail",
+            "Property Dispute",
+            "Others",
+          ],
+        ],
       },
       defaultValue: "Others",
     },
