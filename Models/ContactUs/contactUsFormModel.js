@@ -60,36 +60,5 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
 
-  const today = new Date();
-  today.setMinutes(today.getMinutes() + 330);
-
-  const day = today.toISOString().slice(8, 10);
-  const year = today.toISOString().slice(2, 4);
-  const month = today.toISOString().slice(5, 7);
-
-  ContactUsForm.beforeCreate(async (contact) => {
-    let startWith = `LW${day}${month}${year}`;
-
-    const lastSlug = await ContactUsForm.findOne({
-      where: { slug: { [Op.startsWith]: startWith } },
-      order: [["createdAt", "DESC"]],
-    });
-    let lastDigit;
-    if (lastSlug) {
-      lastDigit = parseInt(lastSlug.dataValues.slug.substring(8)) + 1;
-    } else {
-      lastDigit = 1;
-    }
-
-    let uniqueSlug = startWith + lastDigit;
-
-    // Check if the slug already exists
-    while (await ContactUsForm.findOne({ where: { slug: uniqueSlug } })) {
-      uniqueSlug = `${startWith}${lastDigit++}`;
-    }
-
-    contact.slug = uniqueSlug;
-  });
-
   return ContactUsForm;
 };

@@ -19,12 +19,35 @@ exports.createContactUsForm = async (req, res) => {
     if (error) {
       return res.status(400).json(error.details[0].message);
     }
+    // Generate Slug
+    const todayForSlug = new Date();
+    todayForSlug.setMinutes(todayForSlug.getMinutes() + 330);
+    const dayForSlug = todayForSlug.toISOString().slice(8, 10);
+    const yearForSlug = todayForSlug.toISOString().slice(2, 4);
+    const monthForSlug = todayForSlug.toISOString().slice(5, 7);
+    let startWith = `LW${dayForSlug}${monthForSlug}${yearForSlug}`;
+    const lastSlug = await ContactUsForm.findOne({
+      where: { slug: { [Op.startsWith]: startWith } },
+      order: [["createdAt", "DESC"]],
+    });
+    let lastDigit;
+    if (lastSlug) {
+      lastDigit = parseInt(lastSlug.dataValues.slug.substring(8)) + 1;
+    } else {
+      lastDigit = 1;
+    }
+    let uniqueSlug = startWith + lastDigit;
+    // Check if the slug already exists
+    while (await ContactUsForm.findOne({ where: { slug: uniqueSlug } })) {
+      uniqueSlug = `${startWith}${lastDigit++}`;
+    }
+    let slug = uniqueSlug;
 
     const name = capitalizeFirstLetter(req.body.name);
-    const form = await ContactUsForm.create({ ...req.body, name });
+    const form = await ContactUsForm.create({ ...req.body, name, slug });
 
     // Send OTP to mobile number
-    // Generate OTP for Email
+    // Generate OTP for mobile number
     const otp = generateOTP.generateFixedLengthRandomNumber(
       process.env.OTP_DIGITS_LENGTH
     );
