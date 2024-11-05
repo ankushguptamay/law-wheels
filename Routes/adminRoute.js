@@ -21,6 +21,7 @@ const { getAllReachOut } = require("../Controllers/Admin/reachOutController");
 const {
   getAllContactUsForm,
   getContactUsLeadDetails,
+  addMatuallyContactUsForm,
 } = require("../Controllers/Admin/cantactUsFormModel");
 const {
   getAllMDPFForm,
@@ -85,6 +86,7 @@ router.get("/mutualDivorceBanners", getMutualDivorce);
 router.get("/mutualDivorceDetailBanners", getMutualDivorceDetail);
 
 // Contact Us
+router.post("/contactUsForm", addMatuallyContactUsForm);
 router.get("/contactUsForm", getAllContactUsForm);
 router.get("/contactUsForm/:id", getContactUsLeadDetails);
 

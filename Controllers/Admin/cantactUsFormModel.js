@@ -449,3 +449,92 @@ exports.getContactUsLeadDetails = async (req, res) => {
     });
   }
 };
+
+exports.addMatuallyContactUsForm = async (req, res) => {
+  try {
+    // Validate body
+    const { error } = contactUsForm(req.body);
+    if (error) {
+      return res.status(400).json(error.details[0].message);
+    }
+    // Generate Slug
+    const todayForSlug = new Date();
+    todayForSlug.setMinutes(todayForSlug.getMinutes() + 330);
+    const dayForSlug = todayForSlug.toISOString().slice(8, 10);
+    const yearForSlug = todayForSlug.toISOString().slice(2, 4);
+    const monthForSlug = todayForSlug.toISOString().slice(5, 7);
+    let startWith = `LW${dayForSlug}${monthForSlug}${yearForSlug}`;
+    const lastSlug = await ContactUsForm.findOne({
+      where: { slug: { [Op.startsWith]: startWith } },
+      order: [["createdAt", "DESC"]],
+    });
+    let lastDigit;
+    if (lastSlug) {
+      lastDigit = parseInt(lastSlug.dataValues.slug.substring(8)) + 1;
+    } else {
+      lastDigit = 1;
+    }
+    let uniqueSlug = startWith + lastDigit;
+    // Check if the slug already exists
+    while (await ContactUsForm.findOne({ where: { slug: uniqueSlug } })) {
+      uniqueSlug = `${startWith}${lastDigit++}`;
+    }
+    let slug = uniqueSlug;
+
+    const name = capitalizeFirstLetter(req.body.name);
+    const form = await ContactUsForm.create({ ...req.body, name, slug });
+
+    // Assign
+    const today = new Date();
+    today.setMinutes(today.getMinutes() - 1110);
+    const day = String(today.getUTCDate()).padStart(2, "0");
+    const month = String(today.getUTCMonth() + 1).padStart(2, "0");
+    const year = today.getUTCFullYear();
+    const todayForData = new Date(`${year}-${month}-${day}T18:29:59.000Z`);
+
+    const employee = await Employee.findAll({
+      where: { role: "BDA" },
+      order: [["createdAt", "ASC"]],
+    });
+
+    const totalBDA = employee.length;
+    if (totalBDA === 0) {
+      return res.status(200).send({
+        success: true,
+        message: `Contact us form created successfully! OTP send to ${req.body.mobileNumber}!`,
+        data: {
+          id: form.id,
+          mobileNumber: req.body.mobileNumber,
+        },
+      });
+    } else if (totalBDA === 1) {
+      await form.update({
+        employeeId: employee[0].id,
+      });
+    } else {
+      const todaysTotalTicket = await ContactUsForm.count({
+        where: { createdAt: { [Op.gte]: todayForData } },
+      });
+      const remain = parseInt(todaysTotalTicket) % parseInt(totalBDA);
+      if (remain === 0) {
+        const lastResolver = parseInt(totalBDA) - 1;
+        await form.update({
+          employeeId: employee[lastResolver].id,
+        });
+      } else {
+        await form.update({
+          employeeId: employee[remain - 1].id,
+        });
+      }
+    }
+    res.status(200).json({
+      success: true,
+      message: `Added successfully!`,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};

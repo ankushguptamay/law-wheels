@@ -49,6 +49,11 @@ module.exports = (sequelize, DataTypes) => {
     message: {
       type: DataTypes.TEXT,
     },
+    addedManually: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      allowNull: false,
+    },
     employeeId: {
       type: DataTypes.UUID,
       references: {
