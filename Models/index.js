@@ -185,32 +185,32 @@ db.mDPetitionForm.hasMany(db.mDPFLeadLogs, {
 //     console.log(err);
 //   });
 
-// queryInterface
-//   .addColumn("contactUsForms", "addedManually", {
-//     type: DataTypes.BOOLEAN,
-//     defaultValue: false,
-//     allowNull: false,
-//   })
-//   .then((res) => {
-//     console.log("added!");
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//   });
+queryInterface
+  .addColumn("contactUsForms", "addedManually", {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+    allowNull: false,
+  })
+  .then((res) => {
+    console.log("added!");
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
-// queryInterface
-//   .changeColumn("employees", "role", {
-//     type: DataTypes.STRING,
-//     validate: {
-//       isIn: [["BDA", "Blogger", "BDAManager"]],
-//     },
-//     allowNull: false,
-//   })
-//   .then((res) => {
-//     console.log("changed!");
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//   });
+queryInterface
+  .changeColumn("employees", "role", {
+    type: DataTypes.STRING,
+    validate: {
+      isIn: [["BDA", "Blogger", "BDAManager"]],
+    },
+    allowNull: false,
+  })
+  .then((res) => {
+    console.log("changed!");
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 module.exports = db;
