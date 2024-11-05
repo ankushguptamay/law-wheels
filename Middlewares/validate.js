@@ -196,6 +196,19 @@ exports.leadOtpVerification = (data) => {
   });
   return schema.validate(data);
 };
+
+exports.addMatuallyContactUsForm = (data) => {
+  const schema = joi.object().keys({
+    createdAt: joi.string().required(),
+    mobileNumber: joi
+      .string()
+      .length(10)
+      .pattern(/^[0-9]+$/)
+      .required(),
+  });
+  return schema.validate(data);
+};
+
 exports.reachOutValidation = (data) => {
   const schema = joi.object().keys({
     name: joi.string().min(3).max(30).required(),
@@ -209,7 +222,7 @@ exports.validateEmployeeRegistration = (data) => {
   const schema = joi.object().keys({
     name: joi.string().min(3).max(30).required(),
     email: joi.string().email().required().label("Email"),
-    role: joi.string().valid("BDA", "Blogger").required(),
+    role: joi.string().valid("BDA", "Blogger", "BDAManager").required(),
     mobileNumber: joi
       .string()
       .length(10)

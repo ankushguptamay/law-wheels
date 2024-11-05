@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     role: {
       type: DataTypes.STRING,
       validate: {
-        isIn: [["BDA", "Blogger"]],
+        isIn: [["BDA", "Blogger", "BDAManager"]],
       },
       allowNull: false,
     },

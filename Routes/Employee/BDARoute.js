@@ -4,6 +4,7 @@ const router = express.Router();
 const {
   getAllContactUsLeadBDA,
   getContactUsLeadDetails,
+  addMatuallyContactUsForm,
 } = require("../../Controllers/Admin/cantactUsFormModel");
 const {
   getAllMDPFLeadBDA,
@@ -28,6 +29,7 @@ const { isBDAEmployeePresent } = require("../../Middlewares/isPresent");
 router.use(verifyEmployeeToken);
 router.use(isBDAEmployeePresent);
 
+router.post("/contactUsForm", addMatuallyContactUsForm);
 router.get("/contactLeads/:id", getContactUsLeadDetails);
 router.get("/contactLeads", getAllContactUsLeadBDA);
 

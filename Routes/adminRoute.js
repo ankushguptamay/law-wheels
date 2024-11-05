@@ -21,7 +21,7 @@ const { getAllReachOut } = require("../Controllers/Admin/reachOutController");
 const {
   getAllContactUsForm,
   getContactUsLeadDetails,
-  addMatuallyContactUsForm,
+  changeContactUsLeadsBDA,
 } = require("../Controllers/Admin/cantactUsFormModel");
 const {
   getAllMDPFForm,
@@ -86,7 +86,7 @@ router.get("/mutualDivorceBanners", getMutualDivorce);
 router.get("/mutualDivorceDetailBanners", getMutualDivorceDetail);
 
 // Contact Us
-router.post("/contactUsForm", addMatuallyContactUsForm);
+router.put("/changeBDAFormCUL/:id", changeContactUsLeadsBDA); // Lead will shift in BDAManager panel
 router.get("/contactUsForm", getAllContactUsForm);
 router.get("/contactUsForm/:id", getContactUsLeadDetails);
 

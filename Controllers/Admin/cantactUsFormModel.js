@@ -2,6 +2,7 @@ const db = require("../../Models");
 const {
   contactUsForm,
   leadOtpVerification,
+  addMatuallyContactUsForm,
 } = require("../../Middlewares/validate");
 const { Op } = require("sequelize");
 const generateOTP = require("../../Util/generateOTP");
@@ -453,13 +454,14 @@ exports.getContactUsLeadDetails = async (req, res) => {
 exports.addMatuallyContactUsForm = async (req, res) => {
   try {
     // Validate body
-    const { error } = contactUsForm(req.body);
+    const { error } = addMatuallyContactUsForm(req.body);
     if (error) {
       return res.status(400).json(error.details[0].message);
     }
+
+    const { createdAt, mobileNumber } = req.body;
     // Generate Slug
-    const todayForSlug = new Date();
-    todayForSlug.setMinutes(todayForSlug.getMinutes() + 330);
+    const todayForSlug = new Date(createdAt);
     const dayForSlug = todayForSlug.toISOString().slice(8, 10);
     const yearForSlug = todayForSlug.toISOString().slice(2, 4);
     const monthForSlug = todayForSlug.toISOString().slice(5, 7);
@@ -481,8 +483,12 @@ exports.addMatuallyContactUsForm = async (req, res) => {
     }
     let slug = uniqueSlug;
 
-    const name = capitalizeFirstLetter(req.body.name);
-    const form = await ContactUsForm.create({ ...req.body, name, slug });
+    const form = await ContactUsForm.create({
+      mobileNumber,
+      createdAt: new Date(createdAt),
+      slug,
+      addedManually: true,
+    });
 
     // Assign
     const today = new Date();
@@ -530,6 +536,36 @@ exports.addMatuallyContactUsForm = async (req, res) => {
     res.status(200).json({
       success: true,
       message: `Added successfully!`,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+exports.changeContactUsLeadsBDA = async (req, res) => {
+  try {
+    const employeeId = req.body.employeeId;
+    if (!employeeId) {
+      return res.status(400).json({
+        success: false,
+        message: "Select an employee!",
+      });
+    }
+    const leads = await ContactUsForm.findOne({ where: { id: req.params.id } });
+    if (!leads) {
+      return res.status(400).json({
+        success: false,
+        message: "Contact us details is not present!",
+      });
+    }
+
+    await leads.update({ employeeId: employeeId });
+    res.status(200).json({
+      success: true,
+      message: "BDA changed successfully!",
     });
   } catch (err) {
     res.status(500).json({
