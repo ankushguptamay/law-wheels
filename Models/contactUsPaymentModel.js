@@ -14,17 +14,12 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: "Rupee",
     },
     reference_id: { type: DataTypes.STRING },
+    paymentOrderId: { type: DataTypes.STRING },
     paymentLinkId: { type: DataTypes.STRING },
     status: {
       type: DataTypes.STRING,
       validate: { isIn: [["Paid", "Unpaid"]] },
       defaultValue: "Unpaid",
-    },
-    method: { type: DataTypes.STRING },
-    vpa: { type: DataTypes.STRING },
-    verify: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
     },
   });
   return ContactUsPayment;
