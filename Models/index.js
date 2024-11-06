@@ -194,13 +194,4 @@ db.contactUsForm.hasMany(db.contactUsPayment, {
 //     console.log(err);
 //   });
 
-// queryInterface
-//   .dropTable("contactUsPayments")
-//   .then((res) => {
-//     console.log("changed!");
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//   });
-
 module.exports = db;
