@@ -23,9 +23,9 @@ exports.createPaymentLink = async (amount, customerMobile, customerName) => {
         whatsapp: false, // This feature is not working
       },
       reminder_enable: true,
-      callback_url: "https://affiliate.techastute.in/", // This is the path for user to redirect frontend page
+      callback_url: "https://lawwheels.com/", // This is the path for user to redirect frontend page
       callback_method: "get",
-      reference_id: "ORD123452",
+      reference_id: new Date().getTime(),
       // terms: "https://affiliate.techastute.in/", // This can be displayed to users before they complete the payment.
       // expire_by: Math.floor(Date.now() / 1000) + 24 * 60 * 60, // 1 day expiry , expiry time should be 15min in future
     });
