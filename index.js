@@ -62,7 +62,7 @@ app.use("/api/blogger", blogger);
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
-app.post("webhook/payment-response", payment_response);
+app.post("/webhook/payment-response", payment_response);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
