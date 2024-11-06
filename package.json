@@ -21,6 +21,7 @@
         "mysql2": "^2.3.3",
         "node-cron": "^3.0.3",
         "otp-generator": "^4.0.1",
+        "razorpay": "^2.9.5",
         "sequelize": "^6.25.5"
     }
 }

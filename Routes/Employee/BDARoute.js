@@ -19,6 +19,9 @@ const {
   getMDPFLeadLog,
 } = require("../../Controllers/Employee/mDPFLeadLogController");
 const {
+  create_PaymentLink,
+} = require("../../Controllers/Admin/paymentLinkCont");
+const {
   getEmployeeNotification,
 } = require("../../Controllers/Admin/notificationController");
 
@@ -43,5 +46,8 @@ router.post("/mDPFLeadsLog", addMDPFLeadsLog);
 router.get("/mDPFLeadsLog/:id", getMDPFLeadLog);
 
 router.get("/notification", getEmployeeNotification);
+
+// Payment
+router.post("/createPaymentLink", create_PaymentLink);
 
 module.exports = router;

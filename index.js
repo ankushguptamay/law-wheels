@@ -10,6 +10,7 @@ const employee = require("./Routes/Employee/employeeRoute");
 const {
   pushNotification,
 } = require("./Featurer/scheduledPushNotificationToEmployee");
+const { payment_response } = require("./Controllers/Admin/paymentLinkCont");
 // const os = require('os');
 // const cpus = os.cpus().length;
 // console.log(cpus);
@@ -43,7 +44,7 @@ Notification.findAll({
   where: { scheduleTime: { [Op.gte]: date } },
 })
   .then((data) => {
-    console.log(data.length)
+    console.log(data.length);
     pushNotification(data);
   })
   .catch((err) => {
@@ -61,6 +62,7 @@ app.use("/api/blogger", blogger);
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
+app.post("webhook/payment-response", payment_response);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
