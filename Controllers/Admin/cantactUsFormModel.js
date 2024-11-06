@@ -12,6 +12,7 @@ const ContactUsForm = db.contactUsForm;
 const Employee = db.employee;
 const CSLeadLog = db.contactUsLeadLogs;
 const LeadOTP = db.emailOTP;
+const ContactUsPayment = db.contactUsPayment;
 
 exports.createContactUsForm = async (req, res) => {
   try {
@@ -429,6 +430,7 @@ exports.getContactUsLeadDetails = async (req, res) => {
           as: "employee",
           attributes: ["id", "slug", "name"],
         },
+        { model: ContactUsPayment, as: "payments" },
       ],
       order: [[{ model: CSLeadLog, as: "leadLogs" }, "createdAt", "ASC"]],
     });

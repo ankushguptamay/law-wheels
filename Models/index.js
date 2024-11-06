@@ -195,25 +195,12 @@ db.contactUsForm.hasMany(db.contactUsPayment, {
 //   });
 
 // queryInterface
-//   .addColumn("contactUsForms", "addedManually", {
-//     type: DataTypes.BOOLEAN,
-//     defaultValue: false,
-//     allowNull: false,
-//   })
+//   .dropTable("contactUsPayments")
 //   .then((res) => {
-//     console.log("added!");
+//     console.log("changed!");
 //   })
 //   .catch((err) => {
 //     console.log(err);
 //   });
-
-queryInterface
-  .dropTable("contactUsPayments")
-  .then((res) => {
-    console.log("changed!");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
 
 module.exports = db;
