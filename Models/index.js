@@ -68,6 +68,10 @@ db.blogCategoryAssociation = require("./Blog/blogCategoryAssociation.js")(
   Sequelize
 );
 db.notification = require("./notificationModel.js")(sequelize, Sequelize);
+db.contactUsPayment = require("./contactUsPaymentModel.js")(
+  sequelize,
+  Sequelize
+);
 db.blogTagAssociation = require("./Blog/blogTagAssociation.js")(
   sequelize,
   Sequelize
@@ -170,6 +174,11 @@ db.employee.hasMany(db.mDPFLeadLogs, {
 db.mDPetitionForm.hasMany(db.mDPFLeadLogs, {
   foreignKey: "mDPFLeadId",
   as: "leadLogs",
+});
+
+db.contactUsForm.hasMany(db.contactUsPayment, {
+  foreignKey: "contactUsFormId",
+  as: "payments",
 });
 
 // To add a foriegn key in existing table

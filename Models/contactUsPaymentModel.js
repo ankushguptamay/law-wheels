@@ -14,8 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: "Rupee",
     },
     reference_id: { type: DataTypes.STRING },
-    razorpayOrderId: { type: DataTypes.STRING },
-    razorpayPaymentId: { type: DataTypes.STRING },
+    paymentLinkId: { type: DataTypes.STRING },
     status: {
       type: DataTypes.STRING,
       validate: { isIn: [["Paid", "Unpaid"]] },

@@ -2,6 +2,7 @@ const { createPaymentLink } = require("../../Util/razorpay");
 const db = require("../../Models");
 const { create_PaymentLinkValidation } = require("../../Middlewares/validate");
 const ContactUsForm = db.contactUsForm;
+const ContactUsPayment = db.contactUsPayment;
 
 exports.create_PaymentLink = async (req, res) => {
   try {
@@ -25,6 +26,15 @@ exports.create_PaymentLink = async (req, res) => {
       contactUs.name
     );
 
+    await ContactUsPayment.create({
+      amount,
+      contactUsFormId: leadId,
+      linkCreateAt: response.created_at,
+      link: response.short_url,
+      reference_id: response.reference_id,
+      paymentLinkId: response.id,
+    });
+
     res.status(200).json({
       success: true,
       message: "Successfully",
@@ -40,7 +50,7 @@ exports.create_PaymentLink = async (req, res) => {
 
 exports.payment_response = async (req, res) => {
   try {
-    console.log(req.body.payload.payment.entity);
+    console.log(req.body.payload.payment_link.entity);
     res.status(400).json({
       success: true,
       message: "Successfully",
