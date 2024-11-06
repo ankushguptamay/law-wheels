@@ -283,3 +283,11 @@ exports.createMDPF = (data) => {
   });
   return schema.validate(data);
 };
+
+exports.create_PaymentLinkValidation = (data) => {
+  const schema = joi.object().keys({
+    amount: joi.string().required(),
+    leadId: joi.string().required(),
+  });
+  return schema.validate(data);
+};

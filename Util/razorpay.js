@@ -25,7 +25,7 @@ exports.createPaymentLink = async (amount, customerMobile, customerName) => {
       reminder_enable: true,
       callback_url: "https://lawwheels.com/", // This is the path for user to redirect frontend page
       callback_method: "get",
-      reference_id: new Date().getTime(),
+      reference_id: JSON.stringify(new Date().getTime()),
       // terms: "https://affiliate.techastute.in/", // This can be displayed to users before they complete the payment.
       // expire_by: Math.floor(Date.now() / 1000) + 24 * 60 * 60, // 1 day expiry , expiry time should be 15min in future
     });

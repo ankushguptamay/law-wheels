@@ -1,9 +1,15 @@
 const { createPaymentLink } = require("../../Util/razorpay");
 const db = require("../../Models");
+const { create_PaymentLinkValidation } = require("../../Middlewares/validate");
 const ContactUsForm = db.contactUsForm;
 
 exports.create_PaymentLink = async (req, res) => {
   try {
+    // Validate body
+    const { error } = create_PaymentLinkValidation(req.body);
+    if (error) {
+      return res.status(400).json(error.details[0].message);
+    }
     const { amount, leadId } = req.body;
 
     const contactUs = await ContactUsForm.findOne({ where: { id: leadId } });
