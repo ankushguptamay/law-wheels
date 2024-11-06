@@ -29,6 +29,9 @@ const {
 const { verifyEmployeeToken } = require("../../Middlewares/verifyJWT");
 const { isBDAEmployeePresent } = require("../../Middlewares/isPresent");
 
+// Payment
+router.post("/createPaymentLink", create_PaymentLink);
+
 router.use(verifyEmployeeToken);
 router.use(isBDAEmployeePresent);
 
@@ -46,8 +49,5 @@ router.post("/mDPFLeadsLog", addMDPFLeadsLog);
 router.get("/mDPFLeadsLog/:id", getMDPFLeadLog);
 
 router.get("/notification", getEmployeeNotification);
-
-// Payment
-router.post("/createPaymentLink", create_PaymentLink);
 
 module.exports = router;
