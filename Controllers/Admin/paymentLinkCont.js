@@ -38,7 +38,7 @@ exports.create_PaymentLink = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Successfully",
-      data: response,
+      data: response.short_url,
     });
   } catch (err) {
     res.status(500).json({
