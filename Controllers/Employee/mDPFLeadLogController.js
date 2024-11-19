@@ -87,7 +87,7 @@ exports.addMDPFLeadsLog = async (req, res) => {
 
 exports.getMDPFLeadLog = async (req, res) => {
   try {
-    const log = await MDPFLeadLog.create({
+    const log = await MDPFLeadLog.findOne({
       where: { mDPFLeadId: req.params.id },
       order: [["createdAt", "ASC"]],
     });

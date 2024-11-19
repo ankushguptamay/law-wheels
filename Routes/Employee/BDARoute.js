@@ -40,10 +40,10 @@ router.get("/mDPFForm/:id", getMDPFLeadDetails);
 router.get("/mDPFForm", getAllMDPFLeadBDA);
 
 router.post("/cULeadsLog", addCULeadsLog);
-router.get("/cULeadsLog/:id", getCULeadLog);
+// router.get("/cULeadsLog/:id", getCULeadLog);
 
 router.post("/mDPFLeadsLog", addMDPFLeadsLog);
-router.get("/mDPFLeadsLog/:id", getMDPFLeadLog);
+// router.get("/mDPFLeadsLog/:id", getMDPFLeadLog);
 
 router.get("/notification", getEmployeeNotification);
 

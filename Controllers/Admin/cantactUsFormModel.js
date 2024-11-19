@@ -293,7 +293,7 @@ exports.getAllContactUsForm = async (req, res) => {
           offset: offSet,
           where: { [Op.and]: query },
           include: [
-            { model: CSLeadLog, as: "leadLogs" },
+            // { model: CSLeadLog, as: "leadLogs" },
             {
               model: Employee,
               as: "employee",
@@ -302,7 +302,7 @@ exports.getAllContactUsForm = async (req, res) => {
           ],
           order: [
             ["createdAt", "DESC"],
-            [{ model: CSLeadLog, as: "leadLogs" }, "createdAt", "ASC"],
+            // [{ model: CSLeadLog, as: "leadLogs" }, "createdAt", "ASC"],
           ],
         }),
         ContactUsForm.count({ where: { [Op.and]: query } }),

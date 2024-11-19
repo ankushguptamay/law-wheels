@@ -32,6 +32,13 @@ exports.addCULeadsLog = async (req, res) => {
           success: false,
           message: "Please enter next scheduled call time!",
         });
+      } else {
+        if (nextCallTime.toLowerCase().includes("z")) {
+          return res.status(400).json({
+            success: false,
+            message: `Time formet should not contain "Z"!`,
+          });
+        }
       }
     }
     await CSLeadLog.create({
@@ -54,11 +61,12 @@ exports.addCULeadsLog = async (req, res) => {
       const fiveMin = new Date(nextCallTime);
       fiveMin.setMinutes(fiveMin.getMinutes() - 5);
       const times = [oneHour, fiftenMin, fiveMin];
+      const iso = new Date(nextCallTime).toString().split(" ");
       for (let i = 0; i < times.length; i++) {
         if (times[i].getTime() > new Date().getTime()) {
           notification.push({
             title: "Scheduled call!",
-            content: `Your have a scheduled at ${nextCallTime}`,
+            content: `Your have a scheduled at ${iso.slice(0, 5).join(" ")}`,
             notificationRelatedTo: "ContactUsLead",
             relatedId: cSLeadId,
             scheduleTime: times[i],
@@ -87,7 +95,7 @@ exports.addCULeadsLog = async (req, res) => {
 
 exports.getCULeadLog = async (req, res) => {
   try {
-    const log = await CSLeadLog.create({
+    const log = await CSLeadLog.findOne({
       where: { cSLeadId: req.params.id },
       order: [["createdAt", "ASC"]],
     });
