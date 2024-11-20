@@ -14,6 +14,15 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: false,
     },
     nextCallTime: { type: DataTypes.DATE, allowNull: true },
+    audio_mimeType: {
+      type: DataTypes.STRING,
+    },
+    audio_url: {
+      type: DataTypes.STRING(1234),
+    },
+    audio_fileName: {
+      type: DataTypes.STRING(1234),
+    },
     comment: { type: DataTypes.TEXT },
     cSLeadId: {
       type: DataTypes.UUID,

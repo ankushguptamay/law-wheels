@@ -12,6 +12,7 @@ const {
 } = require("../../Controllers/Admin/mDPetitionFormCont");
 const {
   addCULeadsLog,
+  addAudioToCULog,
   getCULeadLog,
 } = require("../../Controllers/Employee/cSLeadLogController");
 const {
@@ -28,6 +29,8 @@ const {
 //middleware
 const { verifyEmployeeToken } = require("../../Middlewares/verifyJWT");
 const { isBDAEmployeePresent } = require("../../Middlewares/isPresent");
+const multer = require("multer");
+const upload = multer();
 
 router.use(verifyEmployeeToken);
 router.use(isBDAEmployeePresent);
@@ -39,7 +42,8 @@ router.get("/contactLeads", getAllContactUsLeadBDA);
 router.get("/mDPFForm/:id", getMDPFLeadDetails);
 router.get("/mDPFForm", getAllMDPFLeadBDA);
 
-router.post("/cULeadsLog", addCULeadsLog);
+router.post("/cULeadsLog", upload.single("audio"), addCULeadsLog);
+router.post("/cULeadsLogAudio/:id", upload.single("audio"), addAudioToCULog);
 // router.get("/cULeadsLog/:id", getCULeadLog);
 
 router.post("/mDPFLeadsLog", addMDPFLeadsLog);

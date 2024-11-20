@@ -3,6 +3,9 @@ const { cSLeadLogValidation } = require("../../Middlewares/validate");
 const {
   pushNotification,
 } = require("../../Featurer/scheduledPushNotificationToEmployee");
+const { uploadFileToBunny, deleteFileToBunny } = require("../../Util/bunny");
+const bunnyFolderName = "culead-audio";
+const fs = require("fs");
 const db = require("../../Models");
 const CSLeadLog = db.contactUsLeadLogs;
 const Notification = db.notification;
@@ -26,7 +29,8 @@ exports.addCULeadsLog = async (req, res) => {
       leadCategory,
       comment,
     } = req.body;
-    if (isNextCall) {
+
+    if (isNextCall == "true") {
       if (!nextCallTime) {
         return res.status(400).json({
           success: false,
@@ -41,6 +45,26 @@ exports.addCULeadsLog = async (req, res) => {
         }
       }
     }
+
+    // File handling
+    let audio_mimeType, audio_url, audio_fileName;
+    if (req.file) {
+      if (!req.file.mimetype.toLowerCase().startsWith("audio")) {
+        return res.status(400).json({
+          success: false,
+          message: `Only audio acceptable!`,
+        });
+      }
+      // Upload file to bunny
+      const fileStream = Buffer.from(req.file.buffer);
+      const fileName = `${new Date().getTime()}-${req.file.originalname}`;
+      await uploadFileToBunny(bunnyFolderName, fileStream, fileName);
+
+      audio_mimeType = req.file.mimetype;
+      audio_url = `${process.env.SHOW_BUNNY_FILE_HOSTNAME}/${bunnyFolderName}/${fileName}`;
+      audio_fileName = fileName;
+    }
+
     await CSLeadLog.create({
       cSLeadId,
       nextCallTime,
@@ -48,6 +72,9 @@ exports.addCULeadsLog = async (req, res) => {
       callStatus,
       legalDomain,
       leadCategory,
+      audio_mimeType,
+      audio_url,
+      audio_fileName,
       comment,
       employeeId: req.employee.id,
     });
@@ -104,6 +131,68 @@ exports.getCULeadLog = async (req, res) => {
       success: true,
       message: `Logs fetched successfully!`,
       data: log,
+    });
+  } catch (err) {
+    res.status(500).send({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+exports.addAudioToCULog = async (req, res) => {
+  try {
+    // File should be exist
+    if (!req.file) {
+      return res.status(400).send({
+        success: false,
+        message: "Please..upload an audio!",
+      });
+    }
+
+    if (!req.file.mimetype.toLowerCase().startsWith("audio")) {
+      return res.status(400).json({
+        success: false,
+        message: `Only audio acceptable!`,
+      });
+    }
+
+    const id = req.params.id;
+    const lead = await CSLeadLog.findOne({
+      where: {
+        id,
+        employeeId: req.employee.id,
+      },
+    });
+
+    if (!lead) {
+      return res.status(400).json({
+        success: false,
+        message: "This lead is not present or not created by you!",
+      });
+    }
+
+    // Upload file to bunny
+    const fileStream = Buffer.from(req.file.buffer);
+    const fileName = `${new Date().getTime()}-${req.file.originalname}`;
+    await uploadFileToBunny(bunnyFolderName, fileStream, fileName);
+
+    // Delete file from bunny if present
+    if (lead.audio_fileName) {
+      await deleteFileToBunny(bunnyFolderName, lead.audio_fileName);
+    }
+
+    // Update
+    await lead.update({
+      audio_mimeType: req.file.mimetype,
+      audio_url: `${process.env.SHOW_BUNNY_FILE_HOSTNAME}/${bunnyFolderName}/${fileName}`,
+      audio_fileName: fileName,
+    });
+
+    // Final response
+    res.status(200).send({
+      success: true,
+      message: `Audio added successfully!`,
     });
   } catch (err) {
     res.status(500).send({

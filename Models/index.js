@@ -194,4 +194,37 @@ db.contactUsForm.hasMany(db.contactUsPayment, {
 //     console.log(err);
 //   });
 
+// queryInterface
+//   .addColumn("cSLeadLogs", "audio_mimeType", {
+//     type: DataTypes.STRING,
+//   })
+//   .then((res) => {
+//     console.log("1added!");
+//   })
+//   .catch((err) => {
+//     console.log(err);
+//   });
+
+// queryInterface
+//   .addColumn("cSLeadLogs", "audio_url", {
+//     type: DataTypes.STRING(1234),
+//   })
+//   .then((res) => {
+//     console.log("2added!");
+//   })
+//   .catch((err) => {
+//     console.log(err);
+//   });
+
+// queryInterface
+//   .addColumn("cSLeadLogs", "audio_fileName", {
+//     type: DataTypes.STRING(1234),
+//   })
+//   .then((res) => {
+//     console.log("3added!");
+//   })
+//   .catch((err) => {
+//     console.log(err);
+//   });
+
 module.exports = db;

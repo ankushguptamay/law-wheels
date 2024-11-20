@@ -7,6 +7,7 @@ exports.uploadFileToBunny = async (bunnyFolderName, fileStream, filename) => {
       .put(`${BUNNY_HOSTNAME}/${bunnyFolderName}/${filename}`, fileStream, {
         headers: {
           AccessKey: BUNNY_STORAGE_ACCESS_KEY,
+          "Content-Type": "application/octet-stream",
         },
       })
       .then(
