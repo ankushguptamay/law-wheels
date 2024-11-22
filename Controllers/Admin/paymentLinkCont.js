@@ -50,6 +50,7 @@ exports.create_PaymentLink = async (req, res) => {
 
 exports.payment_response = async (req, res) => {
   try {
+    console.log(req.body.payload.payment_link.entity);
     if (req.body.payload.payment_link.entity.status === "paid") {
       const payment = await ContactUsPayment.findOne({
         where: { paymentLinkId: req.body.payload.payment_link.entity.id },
