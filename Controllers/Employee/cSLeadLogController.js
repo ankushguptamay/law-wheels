@@ -83,11 +83,11 @@ exports.addCULeadsLog = async (req, res) => {
     if (nextCallTime) {
       const notification = [];
       const oneHour = new Date(nextCallTime);
-      oneHour.setMinutes(oneHour.getMinutes() - 60);
+      oneHour.setMinutes(oneHour.getMinutes() - 390);
       const fiftenMin = new Date(nextCallTime);
-      fiftenMin.setMinutes(fiftenMin.getMinutes() - 15);
+      fiftenMin.setMinutes(fiftenMin.getMinutes() - 345);
       const fiveMin = new Date(nextCallTime);
-      fiveMin.setMinutes(fiveMin.getMinutes() - 5);
+      fiveMin.setMinutes(fiveMin.getMinutes() - 335);
       const times = [oneHour, fiftenMin, fiveMin];
       const iso = new Date(nextCallTime).toString().split(" ");
       for (let i = 0; i < times.length; i++) {
