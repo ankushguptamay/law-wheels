@@ -12,6 +12,7 @@ const Notification = db.notification;
 
 exports.addCULeadsLog = async (req, res) => {
   try {
+    console.log(req.body);
     // Body Validation
     const { error } = cSLeadLogValidation(req.body);
     if (error) {
@@ -102,6 +103,8 @@ exports.addCULeadsLog = async (req, res) => {
           });
         }
       }
+      console.log(times);
+      console.log(notification);
       await Notification.bulkCreate(notification, { returning: true });
 
       // Send Push Notification
