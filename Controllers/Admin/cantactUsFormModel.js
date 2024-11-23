@@ -8,11 +8,15 @@ const { Op } = require("sequelize");
 const generateOTP = require("../../Util/generateOTP");
 const { sendOTP } = require("../../Util/sendOTPToMobileNumber");
 const { capitalizeFirstLetter } = require("../../Util/capitalizeFirstLetter");
+const {
+  sendSinglePushNotification,
+} = require("../../Util/sendFirebasePushNotification");
 const ContactUsForm = db.contactUsForm;
 const Employee = db.employee;
 const CSLeadLog = db.contactUsLeadLogs;
 const LeadOTP = db.emailOTP;
 const ContactUsPayment = db.contactUsPayment;
+const Notification = db.notification;
 
 exports.createContactUsForm = async (req, res) => {
   try {
@@ -73,9 +77,12 @@ exports.createContactUsForm = async (req, res) => {
     const employee = await Employee.findAll({
       where: { role: "BDA" },
       order: [["createdAt", "ASC"]],
+      attributes: ["id", "device_token"],
+      raw: true,
     });
 
     const totalBDA = employee.length;
+    let assignEmployee;
     if (totalBDA === 0) {
       return res.status(200).send({
         success: true,
@@ -86,9 +93,8 @@ exports.createContactUsForm = async (req, res) => {
         },
       });
     } else if (totalBDA === 1) {
-      await form.update({
-        employeeId: employee[0].id,
-      });
+      await form.update({ employeeId: employee[0].id });
+      assignEmployee = employee[0];
     } else {
       const todaysTotalTicket = await ContactUsForm.count({
         where: { createdAt: { [Op.gte]: todayForData } },
@@ -96,14 +102,41 @@ exports.createContactUsForm = async (req, res) => {
       const remain = parseInt(todaysTotalTicket) % parseInt(totalBDA);
       if (remain === 0) {
         const lastResolver = parseInt(totalBDA) - 1;
-        await form.update({
-          employeeId: employee[lastResolver].id,
-        });
+        await form.update({ employeeId: employee[lastResolver].id });
+        assignEmployee = employee[lastResolver];
       } else {
-        await form.update({
-          employeeId: employee[remain - 1].id,
-        });
+        await form.update({ employeeId: employee[remain - 1].id });
+        assignEmployee = employee[remain - 1];
       }
+    }
+    console.log(assignEmployee);
+    // Send Push notification
+    if (assignEmployee) {
+      const notification = {
+        title: `New Contact Us Lead`,
+        body: `New ${
+          req.body.data_from_page ? req.body.data_from_page : "Other"
+        } from ${name}.`,
+        image: "https://law-wheel.b-cdn.net/image/logo_law.webp",
+      };
+      const data = { notificationId: form.id };
+      sendSinglePushNotification(
+        assignEmployee.device_token,
+        notification,
+        data
+      );
+      // Store Notification
+      await Notification.create({
+        title: `New Contact Us Lead`,
+        content: `New ${
+          req.body.data_from_page ? req.body.data_from_page : "Other"
+        }lead from ${name}.`,
+        notificationRelatedTo: "ContactUsLead",
+        relatedId: form.id,
+        scheduleTime: new Date(),
+        receiverId: assignEmployee.id,
+        device_token: assignEmployee.device_token,
+      });
     }
     res.status(200).json({
       success: true,

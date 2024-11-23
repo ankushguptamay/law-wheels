@@ -5,7 +5,6 @@ const {
 } = require("../../Featurer/scheduledPushNotificationToEmployee");
 const { uploadFileToBunny, deleteFileToBunny } = require("../../Util/bunny");
 const bunnyFolderName = "culead-audio";
-const fs = require("fs");
 const db = require("../../Models");
 const CSLeadLog = db.contactUsLeadLogs;
 const Notification = db.notification;
@@ -103,8 +102,6 @@ exports.addCULeadsLog = async (req, res) => {
           });
         }
       }
-      console.log(times);
-      console.log(notification);
       await Notification.bulkCreate(notification, { returning: true });
 
       // Send Push Notification
