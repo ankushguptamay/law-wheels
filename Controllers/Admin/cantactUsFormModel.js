@@ -109,7 +109,7 @@ exports.createContactUsForm = async (req, res) => {
         assignEmployee = employee[remain - 1];
       }
     }
-    console.log(assignEmployee);
+
     // Send Push notification
     if (assignEmployee) {
       const notification = {

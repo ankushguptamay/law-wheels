@@ -61,7 +61,7 @@ exports.payment_response = async (req, res) => {
         });
       }
     }
-    res.status(400).json({
+    res.status(200).json({
       success: true,
       message: "Successfully",
     });
