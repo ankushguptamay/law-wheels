@@ -1,6 +1,8 @@
 const dbConfig = require("../Config/db.config.js");
 
 const { Sequelize, DataTypes, QueryTypes } = require("sequelize");
+const { associations } = require("./associations.js");
+const { changeInData } = require("./qreryInterface.js");
 const sequelize = new Sequelize(
   dbConfig.database,
   dbConfig.user,
@@ -60,6 +62,7 @@ db.blogParentCategory = require("./Master/blogParentCategoryModel.js")(
   Sequelize
 );
 db.blogTags = require("./Master/blogTagsModel.js")(sequelize, Sequelize);
+db.dualityCUF = require("./ContactUs/dualityCUFModel.js")(sequelize, Sequelize);
 
 db.blogImages = require("./Blog/blogImgesModel.js")(sequelize, Sequelize);
 db.blog = require("./Blog/blogModel.js")(sequelize, Sequelize);
@@ -77,154 +80,10 @@ db.blogTagAssociation = require("./Blog/blogTagAssociation.js")(
   Sequelize
 );
 
-db.user.hasMany(db.mutualDivorceForm, {
-  foreignKey: "userId",
-  as: "mutualDivorceForms",
-});
-db.mutualDivorceForm.belongsTo(db.user, { foreignKey: "userId", as: "user" });
+// All Association
+associations(db);
 
-db.employee.hasMany(db.contactUsForm, {
-  foreignKey: "employeeId",
-  as: "contactUsForms",
-});
-db.contactUsForm.belongsTo(db.employee, {
-  foreignKey: "employeeId",
-  as: "employee",
-});
-
-db.employee.hasMany(db.mDPetitionForm, {
-  foreignKey: "employeeId",
-  as: "mDPetitionForm",
-});
-db.mDPetitionForm.belongsTo(db.employee, {
-  foreignKey: "employeeId",
-  as: "employee",
-});
-
-db.blogParentCategory.hasMany(db.blogCategory, {
-  foreignKey: "pCategoryId",
-  as: "categories",
-});
-db.blogCategory.belongsTo(db.blogParentCategory, {
-  foreignKey: "pCategoryId",
-  as: "pCategory",
-});
-
-// Blog Association
-db.blog.hasMany(db.blogImages, {
-  foreignKey: "blogId",
-  as: "images",
-});
-db.blogImages.belongsTo(db.blog, {
-  foreignKey: "blogId",
-  as: "blog",
-});
-
-db.blog.hasMany(db.blogCategoryAssociation, {
-  foreignKey: "blogId",
-  as: "blogCategory_juction",
-});
-db.blogCategoryAssociation.belongsTo(db.blog, {
-  foreignKey: "blogId",
-  as: "blogs",
-});
-
-db.blogCategory.hasMany(db.blogCategoryAssociation, {
-  foreignKey: "blogCategoryId",
-  as: "blogCategory_juction",
-});
-db.blogCategoryAssociation.belongsTo(db.blogCategory, {
-  foreignKey: "blogCategoryId",
-  as: "categories",
-});
-
-db.blog.hasMany(db.blogTagAssociation, {
-  foreignKey: "blogId",
-  as: "blogTag_juction",
-});
-db.blogTagAssociation.belongsTo(db.blog, {
-  foreignKey: "blogId",
-  as: "blogs",
-});
-
-db.blogTags.hasMany(db.blogTagAssociation, {
-  foreignKey: "blogTagId",
-  as: "blogTag_juction",
-});
-db.blogTagAssociation.belongsTo(db.blogTags, {
-  foreignKey: "blogTagId",
-  as: "tags",
-});
-
-db.employee.hasMany(db.contactUsLeadLogs, {
-  foreignKey: "employeeId",
-  as: "leadLogs",
-});
-
-db.contactUsForm.hasMany(db.contactUsLeadLogs, {
-  foreignKey: "cSLeadId",
-  as: "leadLogs",
-});
-
-db.employee.hasMany(db.mDPFLeadLogs, {
-  foreignKey: "employeeId",
-  as: "mDPFLeadLogs",
-});
-
-db.mDPetitionForm.hasMany(db.mDPFLeadLogs, {
-  foreignKey: "mDPFLeadId",
-  as: "leadLogs",
-});
-
-db.contactUsForm.hasMany(db.contactUsPayment, {
-  foreignKey: "contactUsFormId",
-  as: "payments",
-});
-
-// To add a foriegn key in existing table
-// queryInterface
-//   .addColumn("contactUsForms", "employeeId", {
-//     type: DataTypes.UUID,
-//     references: { model: "employees", key: "id" },
-//   })
-//   .then((res) => {
-//     console.log("added!");
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//   });
-
-// queryInterface
-//   .addColumn("cSLeadLogs", "audio_mimeType", {
-//     type: DataTypes.STRING,
-//   })
-//   .then((res) => {
-//     console.log("1added!");
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//   });
-
-// queryInterface
-//   .addColumn("cSLeadLogs", "audio_url", {
-//     type: DataTypes.STRING(1234),
-//   })
-//   .then((res) => {
-//     console.log("2added!");
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//   });
-
-// queryInterface
-//   .addColumn("cSLeadLogs", "audio_fileName", {
-//     type: DataTypes.STRING(1234),
-//   })
-//   .then((res) => {
-//     console.log("3added!");
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//   });
+// All QueryInterface
+changeInData(queryInterface);
 
 module.exports = db;
