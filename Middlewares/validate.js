@@ -168,7 +168,7 @@ exports.contactUsForm = (data) => {
       .length(10)
       .pattern(/^[0-9]+$/)
       .required(),
-    message: joi.string().min(20).max(1000).required(),
+    message: joi.string().max(1000).optional(),
     data_from_page: joi
       .string()
       .valid(
