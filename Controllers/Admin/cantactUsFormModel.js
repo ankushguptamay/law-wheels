@@ -36,6 +36,11 @@ exports.createContactUsForm = async (req, res) => {
     let assignEmployee, content, title;
     if (form) {
       await DualityCUF.create({ ...req.body, name, contactUsFormId: form.id });
+      // Update createdAt
+      await ContactUsForm.update(
+        { createdAt: new Date() },
+        { where: { id: form.id } }
+      );
       let employee;
       if (form.employeeId) {
         employee = await Employee.findOne({
