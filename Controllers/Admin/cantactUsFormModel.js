@@ -11,6 +11,7 @@ const { capitalizeFirstLetter } = require("../../Util/capitalizeFirstLetter");
 const {
   sendSinglePushNotification,
 } = require("../../Util/sendFirebasePushNotification");
+const { whatsappCampaign } = require("../../Util/whatsappCampaign");
 const ContactUsForm = db.contactUsForm;
 const DualityCUF = db.dualityCUF;
 const Employee = db.employee;
@@ -262,7 +263,11 @@ exports.leadOtpVerification = async (req, res) => {
         message: `OTP expired!`,
       });
     }
+    // Update Lead
     await lead.update({ isMobileVerified: true });
+    // Send WhatsApp Campaign
+    await whatsappCampaign("first-message4", lead.mobileNumber, lead.name, []);
+    // Final Response
     res.status(201).send({
       success: true,
       message: `OTP verify successfully!`,
