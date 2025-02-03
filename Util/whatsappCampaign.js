@@ -10,7 +10,7 @@ const whatsappCampaign = async (
     const data = {
       apiKey: process.env.WHATSAPP_ACCESS_TOKEN,
       campaignName,
-      destination,
+      destination: `+91${destination}`,
       userName,
       media: {
         url: "https://law-wheel.b-cdn.net/image/law-wheels-logo.jpg",
@@ -28,9 +28,12 @@ const whatsappCampaign = async (
       })
       .then(
         (data) => {
+          console.log(data);
           resolve(data);
         },
         (error) => {
+          console.log("ERROR");
+          console.log(error);
           reject(error);
         }
       );

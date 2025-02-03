@@ -266,7 +266,7 @@ exports.leadOtpVerification = async (req, res) => {
     // Update Lead
     await lead.update({ isMobileVerified: true });
     // Send WhatsApp Campaign
-    await whatsappCampaign("first-message4", lead.mobileNumber, lead.name, []);
+    await whatsappCampaign("first-message5", lead.mobileNumber, lead.name, []);
     // Final Response
     res.status(201).send({
       success: true,
